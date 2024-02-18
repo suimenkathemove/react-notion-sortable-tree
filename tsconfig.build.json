@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/react-notion-sortable-tree/**/*.ts",
+    "src/react-notion-sortable-tree/**/*.tsx"
+  ]
+}
