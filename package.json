@@ -14,12 +14,13 @@
     "postinstall": "typesync",
     "tsc": "tsc --noEmit",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint --fix '**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write --log-level=warn '**/*.{js,jsx,ts,tsx,html,gql,graphql,json}'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@suimenkathemove/utils": "^0.1.1"
+    "@suimenkathemove/utils": "^0.1.4"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^7.6.7",
@@ -35,6 +36,7 @@
     "destyle.css": "^4.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-feather": "^2.0.10",
     "storybook": "^7.6.7",
     "typescript": "5.2.2",
     "typesync": "^0.11.1"

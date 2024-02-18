@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@suimenkathemove/utils':
-    specifier: ^0.1.1
-    version: 0.1.1
+    specifier: ^0.1.4
+    version: 0.1.4
 
 devDependencies:
   '@storybook/addon-actions':
@@ -49,6 +49,9 @@ devDependencies:
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
+  react-feather:
+    specifier: ^2.0.10
+    version: 2.0.10(react@18.2.0)
   storybook:
     specifier: ^7.6.7
     version: 7.6.16
@@ -3079,8 +3082,8 @@ packages:
       typesync: 0.11.1(typescript@5.2.2)
     dev: true
 
-  /@suimenkathemove/utils@0.1.1:
-    resolution: {integrity: sha512-rbE4Qr21Mnf0uwyowHr5JjfsG1trG4DIQegbAWXvY4Yk99Q3yc6De4/3HFV//9/sucIXZyqLo4BAfrVeBrb+nQ==}
+  /@suimenkathemove/utils@0.1.4:
+    resolution: {integrity: sha512-orsD5VyQu9dktrWYXd6m5VF6U6cI+gaRLRQ8ONDTDKjiLB33tsTFwZWji8BrvTbgZiObkjzgmkBvs9u0toHSpA==}
     engines: {node: 20.x, pnpm: '>=3'}
     dev: false
 
@@ -7334,6 +7337,15 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-is: 18.1.0
+    dev: true
+
+  /react-feather@2.0.10(react@18.2.0):
+    resolution: {integrity: sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==}
+    peerDependencies:
+      react: '>=16.8.6'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: true
 
   /react-is@16.13.1:
