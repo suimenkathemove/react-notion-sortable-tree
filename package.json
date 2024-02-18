@@ -22,8 +22,8 @@
     "format": "prettier --write --log-level=warn '**/*.{js,jsx,ts,tsx,html,gql,graphql,json}'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "ts-node bin/build.ts && tsc --project tsconfig.build.json",
-    "publish": "rm -rf dist && pnpm build && pnpm publish"
+    "build": "rm -rf dist && ts-node bin/build.ts && tsc --project tsconfig.build.json",
+    "pub": "pnpm build && pnpm publish"
   },
   "dependencies": {
     "@suimenkathemove/utils": "^0.1.4"
