@@ -1,0 +1,50 @@
+{
+  "name": "react-notion-sortable-tree",
+  "version": "0.1.0",
+  "description": "TODO",
+  "keywords": [
+    "react",
+    "notion",
+    "sort",
+    "tree"
+  ],
+  "license": "MIT",
+  "author": "suimenkathemove",
+  "scripts": {
+    "postinstall": "typesync",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write --log-level=warn '**/*.{js,jsx,ts,tsx,html,gql,graphql,json}'",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@suimenkathemove/utils": "^0.1.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^7.6.7",
+    "@storybook/addon-essentials": "^7.6.7",
+    "@storybook/addon-interactions": "^7.6.7",
+    "@storybook/addon-links": "^7.6.7",
+    "@storybook/react": "^7.6.7",
+    "@suimenkathemove/frontend-eslint-config": "^0.1.10",
+    "@suimenkathemove/frontend-tsconfig": "^0.1.7",
+    "@suimenkathemove/prettier-config": "^0.1.4",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "destyle.css": "^4.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "storybook": "^7.6.7",
+    "typescript": "5.2.2",
+    "typesync": "^0.11.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "engines": {
+    "node": "20.x",
+    "pnpm": ">=3"
+  }
+}
