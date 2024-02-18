@@ -7,6 +7,10 @@ void build({
     path.resolve(__dirname, "../src/react-notion-sortable-tree/index.tsx"),
   ],
   bundle: true,
-  outdir: "dist",
+  outfile: "dist/index.js",
   platform: "browser",
+  format: "esm",
+  external: ["react", "react-dom"],
+  minify: true,
+  sourcemap: true,
 });
