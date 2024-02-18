@@ -26,7 +26,8 @@
     "pub": "pnpm build && pnpm publish"
   },
   "dependencies": {
-    "@suimenkathemove/utils": "^0.1.4"
+    "@suimenkathemove/utils": "^0.1.4",
+    "react-feather": "^2.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
@@ -51,7 +52,6 @@
     "esbuild": "^0.20.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-feather": "^2.0.10",
     "storybook": "^7.6.7",
     "ts-node": "^10.9.2",
     "typescript": "5.2.2",
