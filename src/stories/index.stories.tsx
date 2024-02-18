@@ -2,9 +2,12 @@ import { StoryObj } from "@storybook/react";
 import { forwardRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 
-import { tree as mockTree } from "./__mocks__/tree";
-
-import { ContainerProps, ItemProps, ReactNotionSortableTree } from ".";
+import { tree as mockTree } from "../__mocks__/tree";
+import {
+  ContainerProps,
+  ItemProps,
+  ReactNotionSortableTree,
+} from "../react-notion-sortable-tree";
 
 export default {};
 
