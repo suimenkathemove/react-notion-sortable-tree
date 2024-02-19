@@ -5,9 +5,7 @@ const path = require("path");
 const { build } = require("esbuild");
 
 void build({
-  entryPoints: [
-    path.resolve(__dirname, "../src/react-notion-sortable-tree/index.tsx"),
-  ],
+  entryPoints: [path.resolve(__dirname, "../src/index.ts")],
   bundle: true,
   outfile: "dist/index.js",
   platform: "browser",
