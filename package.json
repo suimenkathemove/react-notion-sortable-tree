@@ -27,7 +27,7 @@
     "pub": "pnpm build && pnpm publish"
   },
   "dependencies": {
-    "@suimenkathemove/utils": "^0.1.4",
+    "@suimenkathemove/utils": "^0.1.6",
     "react-feather": "^2.0.10"
   },
   "devDependencies": {

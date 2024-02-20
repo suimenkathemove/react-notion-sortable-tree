@@ -1,8 +1,6 @@
 import {
-  buildTree,
   findIndex,
   findLastIndex,
-  flattenTree,
   invariant,
   range,
 } from "@suimenkathemove/utils";
@@ -19,7 +17,9 @@ import { createPortal } from "react-dom";
 
 import { BorderOrBackground } from "@/types/coordinate";
 import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+import { buildTree } from "@/utils/build-tree";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
+import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
 import { sortTree } from "@/utils/sort-tree";

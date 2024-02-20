@@ -1,12 +1,8 @@
-import {
-  arrayMove,
-  buildTree,
-  findIndex,
-  flattenTree,
-  invariant,
-} from "@suimenkathemove/utils";
+import { arrayMove, findIndex, invariant } from "@suimenkathemove/utils";
 
 import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+import { buildTree } from "@/utils/build-tree";
+import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 
 export const sortTree = (
