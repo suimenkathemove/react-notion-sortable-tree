@@ -1,4 +1,4 @@
-import { Tree } from "@/types";
+import { Tree } from "@/types/tree";
 
 export const tree: Tree = {
   id: "root",

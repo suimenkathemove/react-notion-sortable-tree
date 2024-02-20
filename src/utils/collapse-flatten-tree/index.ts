@@ -1,4 +1,4 @@
-import { FlattenedTreeItem, Node, Tree } from "@/types";
+import { FlattenedTreeItem, Node, Tree } from "@/types/tree";
 
 export const collapseFlattenTree = (tree: Tree): FlattenedTreeItem[] => {
   const flattenedTree: FlattenedTreeItem[] = [];

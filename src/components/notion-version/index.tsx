@@ -7,7 +7,7 @@ import {
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
-import { Tree } from "@/types";
+import { Tree } from "@/types/tree";
 
 export interface NotionVersionProps {
   tree: Tree;

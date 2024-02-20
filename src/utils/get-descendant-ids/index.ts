@@ -1,6 +1,6 @@
 import { findIndex, invariant } from "@suimenkathemove/utils";
 
-import { FlattenedTreeItem, NodeId } from "@/types";
+import { FlattenedTreeItem, NodeId } from "@/types/tree";
 
 export const getDescendantIds = (
   flattenedTree: FlattenedTreeItem[],

@@ -1,4 +1,4 @@
-import { FlattenedTreeItem } from "@/types";
+import { FlattenedTreeItem } from "@/types/tree";
 
 export const flattenedTree: FlattenedTreeItem[] = [
   { id: "1", parentId: "root", depth: 0 },
