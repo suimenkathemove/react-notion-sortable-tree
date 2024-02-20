@@ -20,12 +20,12 @@ import { createPortal } from "react-dom";
 import {
   BorderOrBackground,
   collapseFlattenTree,
-  getDescendantIds,
   getLastDescendantIndex,
   sortTree,
 } from "./models";
 
 import { FlattenedTreeItem, NodeId, Tree } from "@/types";
+import { getDescendantIds } from "@/utils/get-descendant-ids";
 
 interface Coordinate {
   x: number;
