@@ -17,14 +17,11 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import {
-  BorderOrBackground,
-  collapseFlattenTree,
-  getLastDescendantIndex,
-} from "./models";
+import { BorderOrBackground, collapseFlattenTree } from "./models";
 
 import { FlattenedTreeItem, NodeId, Tree } from "@/types";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
+import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
 import { sortTree } from "@/utils/sort-tree";
 
 interface Coordinate {
