@@ -1,14 +1,9 @@
 import { StoryObj } from "@storybook/react";
 import { forwardRef, useState } from "react";
 
-import { tree as mockTree } from "../__mocks__/tree";
-import {
-  ContainerProps,
-  ItemProps,
-  ReactNotionSortableTree,
-} from "../react-notion-sortable-tree";
+import { ContainerProps, ItemProps, ReactNotionSortableTree } from ".";
 
-import { NotionVersion } from "@/react-notion-sortable-tree/notion-version";
+import { tree as mockTree } from "@/__mocks__/tree";
 
 export default {};
 
@@ -73,19 +68,6 @@ export const Default: StoryObj = {
             ),
           )}
         />
-      </Wrapper>
-    );
-  },
-};
-
-export const Notion: StoryObj = {
-  render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [tree, setTree] = useState(mockTree);
-
-    return (
-      <Wrapper>
-        <NotionVersion tree={tree} setTree={setTree} />
       </Wrapper>
     );
   },
