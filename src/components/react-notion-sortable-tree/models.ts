@@ -1,14 +1,12 @@
 import {
-  FlattenedTreeItem,
-  Node,
-  NodeId,
-  Tree,
   arrayMove,
   buildTree,
   findIndex,
   flattenTree,
   invariant,
 } from "@suimenkathemove/utils";
+
+import { FlattenedTreeItem, Node, NodeId, Tree } from "@/types";
 
 export type BorderOrBackground =
   | {

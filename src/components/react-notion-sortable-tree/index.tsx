@@ -1,7 +1,4 @@
 import {
-  FlattenedTreeItem,
-  NodeId,
-  Tree,
   buildTree,
   findIndex,
   findLastIndex,
@@ -27,6 +24,8 @@ import {
   getLastDescendantIndex,
   sortTree,
 } from "./models";
+
+import { FlattenedTreeItem, NodeId, Tree } from "@/types";
 
 interface Coordinate {
   x: number;

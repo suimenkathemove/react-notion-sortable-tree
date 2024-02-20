@@ -1,4 +1,3 @@
-import { Tree } from "@suimenkathemove/utils";
 import { forwardRef } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 
@@ -7,6 +6,8 @@ import {
   ItemProps,
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
+
+import { Tree } from "@/types";
 
 export interface NotionVersionProps {
   tree: Tree;

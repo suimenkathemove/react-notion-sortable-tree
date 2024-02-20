@@ -1,4 +1,4 @@
-import { Tree } from "@suimenkathemove/utils";
+import { Tree } from "@/types";
 
 export const tree: Tree = {
   id: "root",
