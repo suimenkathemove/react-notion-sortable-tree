@@ -1,2 +1,2 @@
-export * from "./notion-version";
-export * from "./react-notion-sortable-tree";
+export * from "./components/notion-version";
+export * from "./components/react-notion-sortable-tree";
