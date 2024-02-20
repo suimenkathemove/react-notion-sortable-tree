@@ -21,11 +21,11 @@ import {
   BorderOrBackground,
   collapseFlattenTree,
   getLastDescendantIndex,
-  sortTree,
 } from "./models";
 
 import { FlattenedTreeItem, NodeId, Tree } from "@/types";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
+import { sortTree } from "@/utils/sort-tree";
 
 interface Coordinate {
   x: number;
