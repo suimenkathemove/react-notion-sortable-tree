@@ -7,11 +7,12 @@ import {
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
-import { Tree } from "@/types/tree";
+import { FlattenedTreeItem, Tree } from "@/types/tree";
 
 export interface NotionVersionProps {
   tree: Tree;
   setTree: (tree: Tree) => void;
+  onClickCollapseButton: (item: FlattenedTreeItem) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
@@ -20,30 +21,30 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
       tree={props.tree}
       setTree={props.setTree}
       Container={forwardRef<HTMLUListElement, ContainerProps<HTMLUListElement>>(
-        (props, ref) => (
+        (containerProps, ref) => (
           <ul
             style={{
-              ...props.style,
+              ...containerProps.style,
               width: 240,
               backgroundColor: "rgb(251 251 250)",
             }}
             ref={ref}
           >
-            {props.children}
+            {containerProps.children}
           </ul>
         ),
       )}
       Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
-        (props, ref) => (
+        (itemProps, ref) => (
           <li
-            onPointerDown={props.onPointerDown}
+            onPointerDown={itemProps.onPointerDown}
             style={{
-              ...props.style,
+              ...itemProps.style,
               display: "flex",
               alignItems: "center",
               paddingTop: 2,
               paddingBottom: 2,
-              paddingLeft: 8 + props.paddingLeft,
+              paddingLeft: 8 + itemProps.paddingLeft,
               paddingRight: 8,
               fontFamily: "BlinkMacSystemFont, sans-serif",
               fontSize: 14,
@@ -54,7 +55,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
           >
             <button
               onClick={() => {
-                props.onCollapse();
+                props.onClickCollapseButton(itemProps.item);
               }}
               onPointerDown={(event) => {
                 event.stopPropagation();
@@ -63,18 +64,28 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                flexGrow: 0,
+                flexShrink: 0,
                 width: 22,
                 height: 22,
                 marginRight: 4,
               }}
             >
-              {props.item.collapsed ? (
+              {itemProps.item.collapsed ? (
                 <ChevronRight size={20} />
               ) : (
                 <ChevronDown size={20} />
               )}
             </button>
-            {props.item.id}
+            <div
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {itemProps.item.id}
+            </div>
           </li>
         ),
       )}
