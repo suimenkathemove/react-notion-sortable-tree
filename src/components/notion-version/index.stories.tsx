@@ -11,8 +11,12 @@ import { updateNode } from "@/utils/update-node";
 
 export default {};
 
-const fetchNodes = async (): Promise<{ id: NodeId }[]> =>
+const listNodes = async (): Promise<{ id: NodeId }[]> =>
   range(3).map(() => ({ id: uuid.v4() }));
+
+const addNode = async (_parentId: NodeId | null): Promise<{ id: NodeId }> => ({
+  id: uuid.v4(),
+});
 
 export const Default: StoryObj = {
   render: () => {
@@ -22,7 +26,7 @@ export const Default: StoryObj = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       void (async () => {
-        const roots = await fetchNodes();
+        const roots = await listNodes();
         const newTree: Tree = {
           id: "root",
           children: roots.map((r) => ({
@@ -40,7 +44,7 @@ export const Default: StoryObj = {
       useCallback(
         async (item) => {
           if (item.collapsed) {
-            const children = await fetchNodes();
+            const children = await listNodes();
             const newTree = updateNode(tree, item.id, (node) => ({
               ...node,
               children: children.map((c) => ({
@@ -62,11 +66,27 @@ export const Default: StoryObj = {
         [tree],
       );
 
+    const onClickAddRootButton: NotionVersionProps["onClickAddRootButton"] =
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCallback(async () => {
+        const node = await addNode(null);
+        const newTree: Tree = {
+          id: "root",
+          children: tree.children.concat({
+            id: node.id,
+            children: [],
+            collapsed: true,
+          }),
+        };
+        setTree(newTree);
+      }, [tree.children]);
+
     return (
       <NotionVersion
         tree={tree}
         setTree={setTree}
         onClickCollapseButton={onClickCollapseButton}
+        onClickAddRootButton={onClickAddRootButton}
       />
     );
   },
