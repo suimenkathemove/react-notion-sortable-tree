@@ -16,11 +16,14 @@ const characterStyle: React.CSSProperties = {
   color: "rgba(25, 23, 17, 0.6)",
 };
 
+const ICON_SIZE = 16;
+
 export interface NotionVersionProps {
   tree: Tree;
   setTree: (tree: Tree) => void;
   onClickCollapseButton: (item: FlattenedTreeItem) => void;
   onClickAddRootButton: () => void;
+  onClickAddChildButton: (item: FlattenedTreeItem) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
@@ -50,6 +53,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                 ...itemProps.style,
                 display: "flex",
                 alignItems: "center",
+                gap: 4,
                 paddingTop: 2,
                 paddingBottom: 2,
                 paddingLeft: 8 + itemProps.paddingLeft,
@@ -66,18 +70,14 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                   event.stopPropagation();
                 }}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   flexGrow: 0,
                   flexShrink: 0,
-                  marginRight: 4,
                 }}
               >
                 {itemProps.item.collapsed ? (
-                  <ChevronRight size={20} />
+                  <ChevronRight size={ICON_SIZE} />
                 ) : (
-                  <ChevronDown size={20} />
+                  <ChevronDown size={ICON_SIZE} />
                 )}
               </button>
               <div
@@ -89,6 +89,20 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
               >
                 {itemProps.item.id}
               </div>
+              <button
+                onClick={() => {
+                  props.onClickAddChildButton(itemProps.item);
+                }}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                }}
+                style={{
+                  flexGrow: 0,
+                  flexShrink: 0,
+                }}
+              >
+                <Plus size={ICON_SIZE} />
+              </button>
             </li>
           ),
         )}
@@ -103,18 +117,13 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
         style={{
           display: "flex",
           alignItems: "center",
+          gap: 4,
           width: "100%",
           padding: "2px 8px",
           ...characterStyle,
         }}
       >
-        <div
-          style={{
-            marginRight: 4,
-          }}
-        >
-          <Plus size={20} />
-        </div>
+        <Plus size={ICON_SIZE} />
         Add a page
       </button>
     </div>

@@ -69,11 +69,11 @@ export const Default: StoryObj = {
     const onClickAddRootButton: NotionVersionProps["onClickAddRootButton"] =
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useCallback(async () => {
-        const node = await addNode(null);
+        const newNode = await addNode(null);
         const newTree: Tree = {
           id: "root",
           children: tree.children.concat({
-            id: node.id,
+            id: newNode.id,
             children: [],
             collapsed: true,
           }),
@@ -81,12 +81,32 @@ export const Default: StoryObj = {
         setTree(newTree);
       }, [tree.children]);
 
+    const onClickAddChildButton: NotionVersionProps["onClickAddChildButton"] =
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCallback(
+        async (item) => {
+          const newNode = await addNode(item.id);
+          const newTree = updateNode(tree, item.id, (node) => ({
+            id: node.id,
+            children: node.children.concat({
+              id: newNode.id,
+              children: [],
+              collapsed: true,
+            }),
+            collapsed: false,
+          }));
+          setTree(newTree);
+        },
+        [tree],
+      );
+
     return (
       <NotionVersion
         tree={tree}
         setTree={setTree}
         onClickCollapseButton={onClickCollapseButton}
         onClickAddRootButton={onClickAddRootButton}
+        onClickAddChildButton={onClickAddChildButton}
       />
     );
   },
