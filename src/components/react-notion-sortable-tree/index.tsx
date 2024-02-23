@@ -17,12 +17,9 @@ import { createPortal } from "react-dom";
 
 import { BorderOrBackground } from "@/types/coordinate";
 import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
-import { buildTree } from "@/utils/build-tree";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
-import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
-import { sortTree } from "@/utils/sort-tree";
 
 interface Coordinate {
   x: number;
@@ -42,8 +39,12 @@ export interface ItemProps<
   style: React.CSSProperties;
   item: FlattenedTreeItem<Data>;
   paddingLeft: number;
-  onCollapse: () => void;
 }
+
+export type MoveTarget = {
+  type: "parent" | "siblingParent" | "siblingChild";
+  id: NodeId;
+};
 
 export interface ReactNotionSortableTreeProps<
   ContainerElement extends HTMLElement,
@@ -51,7 +52,6 @@ export interface ReactNotionSortableTreeProps<
   Data extends Record<string, unknown>,
 > {
   tree: Tree<Data>;
-  setTree: (tree: Tree<Data>) => void;
   Container: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<ContainerProps> &
       React.RefAttributes<ContainerElement>
@@ -60,6 +60,12 @@ export interface ReactNotionSortableTreeProps<
     React.PropsWithoutRef<ItemProps<ItemElement, Data>> &
       React.RefAttributes<ItemElement>
   >;
+  onMove: (
+    fromItem: FlattenedTreeItem<Data>,
+    toParentId: FlattenedTreeItem<Data>["parentId"],
+    toIndex: number,
+    target: MoveTarget,
+  ) => void;
   itemHeight?: number;
   paddingPerDepth?: number;
   backgroundColor?: string;
@@ -199,20 +205,17 @@ export const ReactNotionSortableTree = <
 
     if (fromItem == null || borderOrBackground == null) return;
 
-    const sortTreeWrapper = (
-      newParentIdOfFromItem: FlattenedTreeItem<Data>["parentId"],
-      toId: NodeId,
-    ) => sortTree(props.tree, fromItem, newParentIdOfFromItem, toId);
-
     switch (borderOrBackground.type) {
       case "border":
         {
           const borderIndex = borderOrBackground.index;
           if (borderIndex === 0) {
-            const toItem = collapsedFlattenedTree[borderIndex];
-            invariant(toItem != null, "toItem should exist");
-            const newTree = sortTreeWrapper("root", toItem.id);
-            props.setTree(newTree);
+            const firstItem = collapsedFlattenedTree[borderIndex];
+            invariant(firstItem != null, "toItem should exist");
+            props.onMove(fromItem, null, borderIndex, {
+              type: "siblingChild",
+              id: firstItem.id,
+            });
           } else {
             const upperItem = collapsedFlattenedTree[borderIndex - 1];
             invariant(upperItem != null, "upperItem should exist");
@@ -224,22 +227,17 @@ export const ReactNotionSortableTree = <
               fromItem.id,
             );
             const directlyLowerBorder = borderIndex === lastDescendantIndex + 1;
-            if (isSiblingLeaf && directlyLowerBorder) {
+            const shouldLiftUp = isSiblingLeaf && directlyLowerBorder;
+            if (shouldLiftUp) {
               const parentItem = collapsedFlattenedTree.find(
                 (item) => item.id === fromItem.parentId,
               );
-              const toItem = collapsedFlattenedTree[lastDescendantIndex];
-              invariant(toItem != null, "toItem should exist");
-              const newTree = sortTreeWrapper(
-                parentItem?.parentId ?? "root",
-                toItem.id,
-              );
-              props.setTree(newTree);
+              if (parentItem == null) return;
+              props.onMove(fromItem, parentItem.parentId, lastDescendantIndex, {
+                type: "siblingParent",
+                id: parentItem.id,
+              });
             } else {
-              const newParentIdOfFromItem =
-                lowerItem.depth > upperItem.depth
-                  ? lowerItem.parentId
-                  : upperItem.parentId;
               const fromIndex = findIndex(
                 collapsedFlattenedTree,
                 (item) => item.id === fromItem.id,
@@ -247,10 +245,17 @@ export const ReactNotionSortableTree = <
               invariant(fromIndex != null, "fromIndex should exist");
               const toIndex =
                 borderIndex > fromIndex ? borderIndex - 1 : borderIndex;
-              const toItem = collapsedFlattenedTree[toIndex];
-              invariant(toItem != null, "toItem should exist");
-              const newTree = sortTreeWrapper(newParentIdOfFromItem, toItem.id);
-              props.setTree(newTree);
+              if (lowerItem.depth > upperItem.depth) {
+                props.onMove(fromItem, lowerItem.parentId, toIndex, {
+                  type: "siblingChild",
+                  id: lowerItem.id,
+                });
+              } else {
+                props.onMove(fromItem, upperItem.parentId, toIndex, {
+                  type: "siblingParent",
+                  id: upperItem.id,
+                });
+              }
             }
           }
         }
@@ -260,27 +265,27 @@ export const ReactNotionSortableTree = <
           const lastIndex = collapsedFlattenedTree.length - 1;
           const lastItem = collapsedFlattenedTree[lastIndex];
           invariant(lastItem != null, "lastItem should exist");
-          const newParentIdOfFromItem =
-            ((): FlattenedTreeItem<Data>["parentId"] => {
-              const lastDescendantIndex = getLastDescendantIndex(
-                collapsedFlattenedTree,
-                fromItem.id,
-              );
-              const directlyLowerBorder = lastIndex === lastDescendantIndex;
-              if (directlyLowerBorder) {
-                const parentItem = collapsedFlattenedTree.find(
-                  (item) => item.id === fromItem.parentId,
-                );
-
-                return parentItem?.parentId ?? "root";
-              }
-
-              return lastItem.parentId;
-            })();
-          const toItem = collapsedFlattenedTree[lastIndex];
-          invariant(toItem != null, "toItem should exist");
-          const newTree = sortTreeWrapper(newParentIdOfFromItem, toItem.id);
-          props.setTree(newTree);
+          const lastDescendantIndex = getLastDescendantIndex(
+            collapsedFlattenedTree,
+            fromItem.id,
+          );
+          const directlyLowerBorder = lastIndex === lastDescendantIndex;
+          const shouldLiftUp = directlyLowerBorder;
+          if (shouldLiftUp) {
+            const parentItem = collapsedFlattenedTree.find(
+              (item) => item.id === fromItem.parentId,
+            );
+            if (parentItem == null) return;
+            props.onMove(fromItem, parentItem.parentId, lastIndex, {
+              type: "siblingParent",
+              id: parentItem.id,
+            });
+          } else {
+            props.onMove(fromItem, lastItem.parentId, lastIndex, {
+              type: "siblingParent",
+              id: lastItem.id,
+            });
+          }
         }
         break;
       case "background":
@@ -293,14 +298,15 @@ export const ReactNotionSortableTree = <
               collapsedFlattenedTree,
               (item) => item.parentId === backgroundItem.id,
             );
-            if (siblingLeafIndexInBackgroundItemChildren == null) return 0;
 
-            return siblingLeafIndexInBackgroundItemChildren + 1;
+            return (
+              (siblingLeafIndexInBackgroundItemChildren ?? backgroundIndex) + 1
+            );
           })();
-          const toItem = collapsedFlattenedTree[toIndex];
-          invariant(toItem != null, "toItem should exist");
-          const newTree = sortTreeWrapper(backgroundItem.id, toItem.id);
-          props.setTree(newTree);
+          props.onMove(fromItem, backgroundItem.id, toIndex, {
+            type: "parent",
+            id: backgroundItem.id,
+          });
         }
         break;
       default:
@@ -353,24 +359,6 @@ export const ReactNotionSortableTree = <
     };
   }, [fromItem, pointerMovingDistance]);
 
-  const onCollapse = useCallback(
-    (id: NodeId) => {
-      const flattenedTree = flattenTree(props.tree);
-      const item = flattenedTree.find((item) => item.id === id);
-      invariant(item != null, "item should exist");
-      const newItem: FlattenedTreeItem<Data> = {
-        ...item,
-        collapsed: !item.collapsed,
-      };
-      const newFlattenedTree = flattenedTree.map((item) =>
-        item.id === newItem.id ? newItem : item,
-      );
-      const newTree = buildTree(newFlattenedTree);
-      props.setTree(newTree);
-    },
-    [props],
-  );
-
   return (
     <>
       <props.Container
@@ -397,9 +385,6 @@ export const ReactNotionSortableTree = <
             }}
             item={item}
             paddingLeft={paddingLeft(item.depth)}
-            onCollapse={() => {
-              onCollapse(item.id);
-            }}
             ref={itemElementRefMap.current.get(item.id)}
           />
         ))}
@@ -430,7 +415,6 @@ export const ReactNotionSortableTree = <
             }}
             item={fromItem}
             paddingLeft={paddingLeft(fromItem.depth)}
-            onCollapse={() => {}}
           />,
           document.body,
         )}

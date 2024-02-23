@@ -3,11 +3,14 @@ import { range } from "@suimenkathemove/utils";
 import { useCallback, useEffect, useState } from "react";
 import * as uuid from "uuid";
 
+import { MoveTarget } from "../react-notion-sortable-tree";
+
 import { NotionVersion, NotionVersionProps } from ".";
 
 import { NodeId, Tree } from "@/types/tree";
 import { nodeMap } from "@/utils/node-map";
 import { removeNode } from "@/utils/remove-node";
+import { sortTree } from "@/utils/sort-tree";
 
 export default {};
 
@@ -28,6 +31,8 @@ const backendApi = {
   }),
 
   removeNode: async (id: NodeId): Promise<NodeId> => id,
+
+  moveNode: async (id: NodeId, _target: MoveTarget): Promise<NodeId> => id,
 };
 
 type Data = {
@@ -148,6 +153,16 @@ export const Default: StoryObj = {
       [tree],
     );
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const onMove: NotionVersionProps["onMove"] = useCallback(
+      async (fromItem, toParentId, toIndex, target) => {
+        await backendApi.moveNode(fromItem.id, target);
+        const newTree = sortTree(tree, fromItem, toParentId, toIndex);
+        setTree(newTree);
+      },
+      [tree],
+    );
+
     return (
       <NotionVersion
         tree={tree}
@@ -157,6 +172,7 @@ export const Default: StoryObj = {
         onClickAddChild={onClickAddChild}
         onClickRename={onClickRename}
         onClickDelete={onClickDelete}
+        onMove={onMove}
       />
     );
   },

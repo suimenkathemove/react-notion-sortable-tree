@@ -16,6 +16,7 @@ import {
 import {
   ContainerProps,
   ItemProps,
+  MoveTarget,
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
@@ -42,6 +43,12 @@ export interface NotionVersionProps {
   onClickAddChild: (id: NodeId) => void;
   onClickRename: (item: FlattenedTreeItem<Data>) => void;
   onClickDelete: (id: NodeId) => void;
+  onMove: (
+    fromItem: FlattenedTreeItem<Data>,
+    toParentId: FlattenedTreeItem<Data>["parentId"],
+    toIndex: number,
+    target: MoveTarget,
+  ) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
@@ -54,7 +61,6 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
     >
       <ReactNotionSortableTree
         tree={props.tree}
-        setTree={props.setTree}
         Container={forwardRef<HTMLUListElement, ContainerProps>(
           (containerProps, ref) => (
             <ul style={containerProps.style} ref={ref}>
@@ -217,6 +223,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
             </li>
           ),
         )}
+        onMove={props.onMove}
         itemHeight={28}
         paddingPerDepth={24}
         backgroundColor="rgba(35, 131, 226, 0.14)"
