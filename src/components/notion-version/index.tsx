@@ -1,5 +1,10 @@
+import {
+  ContentProps,
+  Popover,
+  TriggerProps,
+} from "@suimenkathemove/react-library";
 import { forwardRef } from "react";
-import { ChevronDown, ChevronRight, Plus } from "react-feather";
+import { ChevronDown, ChevronRight, Menu, Plus, Trash2 } from "react-feather";
 
 import {
   ContainerProps,
@@ -7,7 +12,7 @@ import {
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
-import { FlattenedTreeItem, Tree } from "@/types/tree";
+import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
 
 const characterStyle: React.CSSProperties = {
   fontFamily: "BlinkMacSystemFont, sans-serif",
@@ -21,9 +26,10 @@ const ICON_SIZE = 16;
 export interface NotionVersionProps {
   tree: Tree;
   setTree: (tree: Tree) => void;
-  onClickCollapseButton: (item: FlattenedTreeItem) => void;
-  onClickAddRootButton: () => void;
-  onClickAddChildButton: (item: FlattenedTreeItem) => void;
+  onClickCollapse: (item: FlattenedTreeItem) => void;
+  onClickAddRoot: () => void;
+  onClickAddChild: (item: FlattenedTreeItem) => void;
+  onClickDelete: (id: NodeId) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
@@ -64,7 +70,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
             >
               <button
                 onClick={() => {
-                  props.onClickCollapseButton(itemProps.item);
+                  props.onClickCollapse(itemProps.item);
                 }}
                 onPointerDown={(event) => {
                   event.stopPropagation();
@@ -89,9 +95,72 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
               >
                 {itemProps.item.id}
               </div>
+              <Popover
+                Trigger={forwardRef<HTMLButtonElement, TriggerProps>(
+                  (triggerProps, ref) => (
+                    <button
+                      onClick={triggerProps.onClick}
+                      onPointerDown={(event) => {
+                        event.stopPropagation();
+                      }}
+                      style={{
+                        flexGrow: 0,
+                        flexShrink: 0,
+                      }}
+                      ref={ref}
+                    >
+                      <Menu size={ICON_SIZE} />
+                    </button>
+                  ),
+                )}
+                Content={forwardRef<HTMLDivElement, ContentProps>(
+                  (contentProps, ref) => (
+                    <div
+                      onPointerDown={(event) => {
+                        event.stopPropagation();
+                      }}
+                      style={{
+                        ...contentProps.style,
+                        width: 265,
+                        padding: "6px 0",
+                        backgroundColor: "white",
+                        borderRadius: 6,
+                        boxShadow:
+                          "rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px",
+                        ...characterStyle,
+                      }}
+                      ref={ref}
+                    >
+                      <div
+                        style={{
+                          padding: "0 4px",
+                        }}
+                      >
+                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                        <div
+                          onClick={() => {
+                            props.onClickDelete(itemProps.item.id);
+                          }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                            height: 28,
+                            padding: "0 10px",
+                          }}
+                        >
+                          <Trash2 size={ICON_SIZE} />
+                          Delete
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                positionType="right-top"
+              />
               <button
                 onClick={() => {
-                  props.onClickAddChildButton(itemProps.item);
+                  props.onClickAddChild(itemProps.item);
                 }}
                 onPointerDown={(event) => {
                   event.stopPropagation();
@@ -113,7 +182,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
         borderColor="rgba(35, 131, 226, 0.43)"
       />
       <button
-        onClick={props.onClickAddRootButton}
+        onClick={props.onClickAddRoot}
         style={{
           display: "flex",
           alignItems: "center",

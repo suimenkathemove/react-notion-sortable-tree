@@ -10,12 +10,12 @@ export const updateNode = (
 
     return {
       ...node,
-      children: node.children.map((c) => dfs(c)),
+      children: node.children.map(dfs),
     };
   };
 
   return {
     id: "root",
-    children: tree.children.map((c) => dfs(c)),
+    children: tree.children.map(dfs),
   };
 };
