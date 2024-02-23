@@ -6,8 +6,8 @@ import * as uuid from "uuid";
 import { NotionVersion, NotionVersionProps } from ".";
 
 import { NodeId, Tree } from "@/types/tree";
+import { nodeMap } from "@/utils/node-map";
 import { removeNode } from "@/utils/remove-node";
-import { updateNode } from "@/utils/update-node";
 
 export default {};
 
@@ -61,7 +61,7 @@ export const Default: StoryObj = {
         async (item) => {
           if (item.collapsed) {
             const children = await backendApi.listNodes();
-            const newTree = updateNode(tree, item.id, (node) => ({
+            const newTree = nodeMap(tree, item.id, (node) => ({
               ...node,
               children: children.map((c) => ({
                 id: c.id,
@@ -75,7 +75,7 @@ export const Default: StoryObj = {
             }));
             setTree(newTree);
           } else {
-            const newTree = updateNode(tree, item.id, (node) => ({
+            const newTree = nodeMap(tree, item.id, (node) => ({
               ...node,
               collapsed: true,
             }));
@@ -105,7 +105,7 @@ export const Default: StoryObj = {
       useCallback(
         async (id) => {
           const newNode = await backendApi.addNode(id);
-          const newTree = updateNode(tree, id, (node) => ({
+          const newTree = nodeMap(tree, id, (node) => ({
             ...node,
             children: node.children.concat({
               id: newNode.id,
@@ -127,7 +127,7 @@ export const Default: StoryObj = {
       async (item) => {
         const value = window.prompt("", item.data.title) ?? "";
         await backendApi.updateNode({ id: item.id, title: value });
-        const newTree = updateNode(tree, item.id, (node) => ({
+        const newTree = nodeMap(tree, item.id, (node) => ({
           ...node,
           data: {
             title: value,

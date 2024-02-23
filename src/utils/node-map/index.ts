@@ -1,6 +1,6 @@
 import { Node, NodeId, Tree } from "@/types/tree";
 
-export const updateNode = <T extends Record<string, unknown>>(
+export const nodeMap = <T extends Record<string, unknown>>(
   tree: Tree<T>,
   id: NodeId,
   newNode: (node: Node<T>) => Node<T>,
