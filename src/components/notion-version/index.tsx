@@ -237,6 +237,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
           alignItems: "center",
           gap: 4,
           width: "100%",
+          height: 28,
           padding: "2px 8px",
           ...characterStyle,
         }}
