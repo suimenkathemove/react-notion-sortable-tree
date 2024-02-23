@@ -1,9 +1,9 @@
-import { FlattenedTreeItem, Node, Tree } from "@/types/tree";
+import { FlattenedTreeItem, Node, NodeId, Tree } from "@/types/tree";
 
 export const buildTree = (flattenedTree: FlattenedTreeItem[]): Tree => {
   const tree: Tree = { id: "root", children: [] };
-  const map: Record<Tree["id"], Tree> & Record<Node["id"], Node> = {
-    [tree.id]: tree,
+  const map: Record<NodeId, Node> = {
+    [tree.id]: tree as Node,
   };
 
   flattenedTree.forEach((item) => {
@@ -12,6 +12,7 @@ export const buildTree = (flattenedTree: FlattenedTreeItem[]): Tree => {
       map[parentId] = {
         id: parentId,
         children: [],
+        collapsed: true,
       };
     }
     const parent = map[parentId]!;
