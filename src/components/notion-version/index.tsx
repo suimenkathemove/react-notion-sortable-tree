@@ -4,7 +4,14 @@ import {
   TriggerProps,
 } from "@suimenkathemove/react-library";
 import { forwardRef } from "react";
-import { ChevronDown, ChevronRight, Menu, Plus, Trash2 } from "react-feather";
+import {
+  ChevronDown,
+  ChevronRight,
+  Edit,
+  Menu,
+  Plus,
+  Trash2,
+} from "react-feather";
 
 import {
   ContainerProps,
@@ -32,7 +39,8 @@ export interface NotionVersionProps {
   setTree: (tree: Tree<Data>) => void;
   onClickCollapse: (item: FlattenedTreeItem<Data>) => void;
   onClickAddRoot: () => void;
-  onClickAddChild: (item: FlattenedTreeItem<Data>) => void;
+  onClickAddChild: (id: NodeId) => void;
+  onClickRename: (item: FlattenedTreeItem<Data>) => void;
   onClickDelete: (id: NodeId) => void;
 }
 
@@ -155,13 +163,35 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              gap: 4,
+                              gap: 10,
                               height: 28,
                               padding: "0 10px",
                             }}
                           >
                             <Trash2 size={ICON_SIZE} />
                             Delete
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            padding: "0 4px",
+                          }}
+                        >
+                          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                          <div
+                            onClick={() => {
+                              props.onClickRename(itemProps.item);
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              height: 28,
+                              padding: "0 10px",
+                            }}
+                          >
+                            <Edit size={ICON_SIZE} />
+                            Rename
                           </div>
                         </div>
                       </div>
@@ -171,7 +201,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                 />
                 <button
                   onClick={() => {
-                    props.onClickAddChild(itemProps.item);
+                    props.onClickAddChild(itemProps.item.id);
                   }}
                   onPointerDown={(event) => {
                     event.stopPropagation();

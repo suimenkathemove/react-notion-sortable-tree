@@ -19,6 +19,14 @@ const backendApi = {
     id: uuid.v4(),
   }),
 
+  updateNode: async (input: {
+    id: NodeId;
+    title: string;
+  }): Promise<{ id: NodeId; title: string }> => ({
+    id: input.id,
+    title: input.title,
+  }),
+
   removeNode: async (id: NodeId): Promise<NodeId> => id,
 };
 
@@ -95,10 +103,10 @@ export const Default: StoryObj = {
     const onClickAddChild: NotionVersionProps["onClickAddChild"] =
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useCallback(
-        async (item) => {
-          const newNode = await backendApi.addNode(item.id);
-          const newTree = updateNode(tree, item.id, (node) => ({
-            id: node.id,
+        async (id) => {
+          const newNode = await backendApi.addNode(id);
+          const newTree = updateNode(tree, id, (node) => ({
+            ...node,
             children: node.children.concat({
               id: newNode.id,
               children: [],
@@ -108,12 +116,27 @@ export const Default: StoryObj = {
               },
             }),
             collapsed: false,
-            data: node.data,
           }));
           setTree(newTree);
         },
         [tree],
       );
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const onClickRename: NotionVersionProps["onClickRename"] = useCallback(
+      async (item) => {
+        const value = window.prompt("", item.data.title) ?? "";
+        await backendApi.updateNode({ id: item.id, title: value });
+        const newTree = updateNode(tree, item.id, (node) => ({
+          ...node,
+          data: {
+            title: value,
+          },
+        }));
+        setTree(newTree);
+      },
+      [tree],
+    );
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const onClickDelete: NotionVersionProps["onClickDelete"] = useCallback(
@@ -132,6 +155,7 @@ export const Default: StoryObj = {
         onClickCollapse={onClickCollapse}
         onClickAddRoot={onClickAddRoot}
         onClickAddChild={onClickAddChild}
+        onClickRename={onClickRename}
         onClickDelete={onClickDelete}
       />
     );
