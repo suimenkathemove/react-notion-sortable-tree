@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@suimenkathemove/react-library':
-    specifier: ^0.1.5
-    version: 0.1.5(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.1.6
+    version: 0.1.6(react-dom@18.2.0)(react@18.2.0)
   '@suimenkathemove/utils':
     specifier: ^0.1.6
     version: 0.1.6
@@ -3940,10 +3940,9 @@ packages:
       prettier: 3.2.5
     dev: true
 
-  /@suimenkathemove/react-library@0.1.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-EJiyZ4bancl1KX5V0EnRGPMH1lA2s8NOepVYGfRUciqRSYgOQ3oSMMNMFOoVXKq8ULlJsNmor8ixX0J5UQm7YQ==}
+  /@suimenkathemove/react-library@0.1.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wqbK3JVsSa8iHt6MrQGhfNMcAL3SEJMhiDLCOCHyH7UTdl1PrKVHykmKxLnsXK6SZ0POB+Wve/CiDZ3MthWdvw==}
     engines: {node: 20.x, pnpm: '>=3'}
-    requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
