@@ -3,8 +3,8 @@ import { findIndex, invariant } from "@suimenkathemove/utils";
 import { FlattenedTreeItem, NodeId } from "@/types/tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 
-export const getLastDescendantIndex = (
-  flattenedTree: FlattenedTreeItem[],
+export const getLastDescendantIndex = <T extends Record<string, unknown>>(
+  flattenedTree: FlattenedTreeItem<T>[],
   targetId: NodeId,
 ): number => {
   const descendantIds = getDescendantIds(flattenedTree, targetId);

@@ -34,10 +34,13 @@ export interface ContainerProps {
   children: React.ReactNode;
 }
 
-export interface ItemProps<ItemElement extends HTMLElement> {
+export interface ItemProps<
+  ItemElement extends HTMLElement,
+  Data extends Record<string, unknown>,
+> {
   onPointerDown: React.PointerEventHandler<ItemElement>;
   style: React.CSSProperties;
-  item: FlattenedTreeItem;
+  item: FlattenedTreeItem<Data>;
   paddingLeft: number;
   onCollapse: () => void;
 }
@@ -45,15 +48,16 @@ export interface ItemProps<ItemElement extends HTMLElement> {
 export interface ReactNotionSortableTreeProps<
   ContainerElement extends HTMLElement,
   ItemElement extends HTMLElement,
+  Data extends Record<string, unknown>,
 > {
-  tree: Tree;
-  setTree: (tree: Tree) => void;
+  tree: Tree<Data>;
+  setTree: (tree: Tree<Data>) => void;
   Container: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<ContainerProps> &
       React.RefAttributes<ContainerElement>
   >;
   Item: React.ForwardRefExoticComponent<
-    React.PropsWithoutRef<ItemProps<ItemElement>> &
+    React.PropsWithoutRef<ItemProps<ItemElement, Data>> &
       React.RefAttributes<ItemElement>
   >;
   itemHeight?: number;
@@ -66,8 +70,9 @@ export interface ReactNotionSortableTreeProps<
 export const ReactNotionSortableTree = <
   ContainerElement extends HTMLElement,
   ItemElement extends HTMLElement,
+  Data extends Record<string, unknown>,
 >(
-  props: ReactNotionSortableTreeProps<ContainerElement, ItemElement>,
+  props: ReactNotionSortableTreeProps<ContainerElement, ItemElement, Data>,
 ) => {
   const itemHeight = props.itemHeight ?? 28;
   const heightDisplayBorder = itemHeight / 5;
@@ -82,7 +87,9 @@ export const ReactNotionSortableTree = <
     [props.tree],
   );
 
-  const [fromItem, setFromItem] = useState<FlattenedTreeItem | null>(null);
+  const [fromItem, setFromItem] = useState<FlattenedTreeItem<Data> | null>(
+    null,
+  );
 
   const containerElementRef = useRef<ContainerElement>(null);
   const itemElementRefMap = useRef<Map<NodeId, React.RefObject<ItemElement>>>(
@@ -160,7 +167,7 @@ export const ReactNotionSortableTree = <
   ]);
 
   const onPointerDown = useCallback(
-    (event: React.PointerEvent<ItemElement>, item: FlattenedTreeItem) => {
+    (event: React.PointerEvent<ItemElement>, item: FlattenedTreeItem<Data>) => {
       setFromItem(item);
 
       pointerStartPositionRef.current = { x: event.clientX, y: event.clientY };
@@ -193,7 +200,7 @@ export const ReactNotionSortableTree = <
     if (fromItem == null || borderOrBackground == null) return;
 
     const sortTreeWrapper = (
-      newParentIdOfFromItem: FlattenedTreeItem["parentId"],
+      newParentIdOfFromItem: FlattenedTreeItem<Data>["parentId"],
       toId: NodeId,
     ) => sortTree(props.tree, fromItem, newParentIdOfFromItem, toId);
 
@@ -253,22 +260,23 @@ export const ReactNotionSortableTree = <
           const lastIndex = collapsedFlattenedTree.length - 1;
           const lastItem = collapsedFlattenedTree[lastIndex];
           invariant(lastItem != null, "lastItem should exist");
-          const newParentIdOfFromItem = ((): FlattenedTreeItem["parentId"] => {
-            const lastDescendantIndex = getLastDescendantIndex(
-              collapsedFlattenedTree,
-              fromItem.id,
-            );
-            const directlyLowerBorder = lastIndex === lastDescendantIndex;
-            if (directlyLowerBorder) {
-              const parentItem = collapsedFlattenedTree.find(
-                (item) => item.id === fromItem.parentId,
+          const newParentIdOfFromItem =
+            ((): FlattenedTreeItem<Data>["parentId"] => {
+              const lastDescendantIndex = getLastDescendantIndex(
+                collapsedFlattenedTree,
+                fromItem.id,
               );
+              const directlyLowerBorder = lastIndex === lastDescendantIndex;
+              if (directlyLowerBorder) {
+                const parentItem = collapsedFlattenedTree.find(
+                  (item) => item.id === fromItem.parentId,
+                );
 
-              return parentItem?.parentId ?? "root";
-            }
+                return parentItem?.parentId ?? "root";
+              }
 
-            return lastItem.parentId;
-          })();
+              return lastItem.parentId;
+            })();
           const toItem = collapsedFlattenedTree[lastIndex];
           invariant(toItem != null, "toItem should exist");
           const newTree = sortTreeWrapper(newParentIdOfFromItem, toItem.id);
@@ -350,7 +358,7 @@ export const ReactNotionSortableTree = <
       const flattenedTree = flattenTree(props.tree);
       const item = flattenedTree.find((item) => item.id === id);
       invariant(item != null, "item should exist");
-      const newItem: FlattenedTreeItem = {
+      const newItem: FlattenedTreeItem<Data> = {
         ...item,
         collapsed: !item.collapsed,
       };

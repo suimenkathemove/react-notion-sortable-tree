@@ -5,7 +5,6 @@ import * as uuid from "uuid";
 
 import { NotionVersion, NotionVersionProps } from ".";
 
-import { tree as mockTree } from "@/__mocks__/tree";
 import { NodeId, Tree } from "@/types/tree";
 import { removeNode } from "@/utils/remove-node";
 import { updateNode } from "@/utils/update-node";
@@ -23,19 +22,26 @@ const backendApi = {
   removeNode: async (id: NodeId): Promise<NodeId> => id,
 };
 
+type Data = {
+  title: string;
+};
+
 export const Default: StoryObj = {
   render: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [tree, setTree] = useState(mockTree);
+    const [tree, setTree] = useState<Tree<Data>>([]);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       void (async () => {
         const roots = await backendApi.listNodes();
-        const newTree: Tree = roots.map((r) => ({
+        const newTree: Tree<Data> = roots.map((r) => ({
           id: r.id,
           children: [],
           collapsed: true,
+          data: {
+            title: "",
+          },
         }));
         setTree(newTree);
       })();
@@ -53,6 +59,9 @@ export const Default: StoryObj = {
                 id: c.id,
                 children: [],
                 collapsed: true,
+                data: {
+                  title: "",
+                },
               })),
               collapsed: false,
             }));
@@ -72,10 +81,13 @@ export const Default: StoryObj = {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useCallback(async () => {
         const newNode = await backendApi.addNode(null);
-        const newTree: Tree = tree.concat({
+        const newTree: Tree<Data> = tree.concat({
           id: newNode.id,
           children: [],
           collapsed: true,
+          data: {
+            title: "",
+          },
         });
         setTree(newTree);
       }, [tree]);
@@ -91,8 +103,12 @@ export const Default: StoryObj = {
               id: newNode.id,
               children: [],
               collapsed: true,
+              data: {
+                title: "",
+              },
             }),
             collapsed: false,
+            data: node.data,
           }));
           setTree(newTree);
         },

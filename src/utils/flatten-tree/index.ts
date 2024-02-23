@@ -1,11 +1,13 @@
 import { FlattenedTreeItem, Node, Tree } from "@/types/tree";
 
-export const flattenTree = (tree: Tree): FlattenedTreeItem[] => {
-  const flattenedTree: FlattenedTreeItem[] = [];
+export const flattenTree = <T extends Record<string, unknown>>(
+  tree: Tree<T>,
+): FlattenedTreeItem<T>[] => {
+  const flattenedTree: FlattenedTreeItem<T>[] = [];
 
   const flatten = (
-    node: Node,
-    parentId: FlattenedTreeItem["parentId"],
+    node: Node<T>,
+    parentId: FlattenedTreeItem<T>["parentId"],
     depth = 0,
   ): void => {
     flattenedTree.push({
@@ -13,6 +15,7 @@ export const flattenTree = (tree: Tree): FlattenedTreeItem[] => {
       parentId,
       depth,
       collapsed: node.collapsed,
+      data: node.data,
     });
 
     node.children.forEach((c) => {

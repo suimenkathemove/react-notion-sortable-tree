@@ -4,6 +4,7 @@ import { forwardRef, useState } from "react";
 import { ContainerProps, ItemProps, ReactNotionSortableTree } from ".";
 
 import { tree as mockTree } from "@/__mocks__/tree";
+import { Tree } from "@/types/tree";
 
 export default {};
 
@@ -22,10 +23,12 @@ const Wrapper: React.FC<{ children: React.ReactNode }> = (props) => {
   );
 };
 
+type Data = Record<string, unknown>;
+
 export const Default: StoryObj = {
   render: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [tree, setTree] = useState(mockTree);
+    const [tree, setTree] = useState<Tree<Data>>(mockTree);
 
     return (
       <Wrapper>
@@ -45,7 +48,7 @@ export const Default: StoryObj = {
               </ul>
             ),
           )}
-          Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
+          Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement, Data>>(
             (props, ref) => (
               <li
                 onPointerDown={props.onPointerDown}

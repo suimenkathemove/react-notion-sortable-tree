@@ -23,12 +23,16 @@ const characterStyle: React.CSSProperties = {
 
 const ICON_SIZE = 16;
 
+type Data = {
+  title: string;
+};
+
 export interface NotionVersionProps {
-  tree: Tree;
-  setTree: (tree: Tree) => void;
-  onClickCollapse: (item: FlattenedTreeItem) => void;
+  tree: Tree<Data>;
+  setTree: (tree: Tree<Data>) => void;
+  onClickCollapse: (item: FlattenedTreeItem<Data>) => void;
   onClickAddRoot: () => void;
-  onClickAddChild: (item: FlattenedTreeItem) => void;
+  onClickAddChild: (item: FlattenedTreeItem<Data>) => void;
   onClickDelete: (id: NodeId) => void;
 }
 
@@ -50,7 +54,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
             </ul>
           ),
         )}
-        Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
+        Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement, Data>>(
           (itemProps, ref) => (
             <li
               onPointerDown={itemProps.onPointerDown}
@@ -92,85 +96,94 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {itemProps.item.id}
+                {itemProps.item.data.title || "Untitled"}
               </div>
-              <Popover
-                Trigger={forwardRef<HTMLButtonElement, TriggerProps>(
-                  (triggerProps, ref) => (
-                    <button
-                      onClick={triggerProps.onClick}
-                      onPointerDown={(event) => {
-                        event.stopPropagation();
-                      }}
-                      style={{
-                        flexGrow: 0,
-                        flexShrink: 0,
-                      }}
-                      ref={ref}
-                    >
-                      <Menu size={ICON_SIZE} />
-                    </button>
-                  ),
-                )}
-                Content={forwardRef<HTMLDivElement, ContentProps>(
-                  (contentProps, ref) => (
-                    <div
-                      onPointerDown={(event) => {
-                        event.stopPropagation();
-                      }}
-                      style={{
-                        ...contentProps.style,
-                        width: 265,
-                        padding: "6px 0",
-                        backgroundColor: "white",
-                        borderRadius: 6,
-                        boxShadow:
-                          "rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px",
-                        ...characterStyle,
-                      }}
-                      ref={ref}
-                    >
-                      <div
-                        style={{
-                          padding: "0 4px",
-                        }}
-                      >
-                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-                        <div
-                          onClick={() => {
-                            props.onClickDelete(itemProps.item.id);
-                          }}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 4,
-                            height: 28,
-                            padding: "0 10px",
-                          }}
-                        >
-                          <Trash2 size={ICON_SIZE} />
-                          Delete
-                        </div>
-                      </div>
-                    </div>
-                  ),
-                )}
-                positionType="right-top"
-              />
-              <button
-                onClick={() => {
-                  props.onClickAddChild(itemProps.item);
-                }}
-                onPointerDown={(event) => {
-                  event.stopPropagation();
-                }}
+              <div
                 style={{
-                  flexGrow: 0,
-                  flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  marginLeft: "auto",
                 }}
               >
-                <Plus size={ICON_SIZE} />
-              </button>
+                <Popover
+                  Trigger={forwardRef<HTMLButtonElement, TriggerProps>(
+                    (triggerProps, ref) => (
+                      <button
+                        onClick={triggerProps.onClick}
+                        onPointerDown={(event) => {
+                          event.stopPropagation();
+                        }}
+                        style={{
+                          flexGrow: 0,
+                          flexShrink: 0,
+                        }}
+                        ref={ref}
+                      >
+                        <Menu size={ICON_SIZE} />
+                      </button>
+                    ),
+                  )}
+                  Content={forwardRef<HTMLDivElement, ContentProps>(
+                    (contentProps, ref) => (
+                      <div
+                        onPointerDown={(event) => {
+                          event.stopPropagation();
+                        }}
+                        style={{
+                          ...contentProps.style,
+                          width: 265,
+                          padding: "6px 0",
+                          backgroundColor: "white",
+                          borderRadius: 6,
+                          boxShadow:
+                            "rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px",
+                          ...characterStyle,
+                        }}
+                        ref={ref}
+                      >
+                        <div
+                          style={{
+                            padding: "0 4px",
+                          }}
+                        >
+                          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                          <div
+                            onClick={() => {
+                              props.onClickDelete(itemProps.item.id);
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 4,
+                              height: 28,
+                              padding: "0 10px",
+                            }}
+                          >
+                            <Trash2 size={ICON_SIZE} />
+                            Delete
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  positionType="right-top"
+                />
+                <button
+                  onClick={() => {
+                    props.onClickAddChild(itemProps.item);
+                  }}
+                  onPointerDown={(event) => {
+                    event.stopPropagation();
+                  }}
+                  style={{
+                    flexGrow: 0,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Plus size={ICON_SIZE} />
+                </button>
+              </div>
             </li>
           ),
         )}

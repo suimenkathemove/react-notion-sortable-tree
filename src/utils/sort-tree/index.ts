@@ -5,19 +5,19 @@ import { buildTree } from "@/utils/build-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 
-export const sortTree = (
-  tree: Tree,
-  fromItem: FlattenedTreeItem,
-  newParentIdOfFromItem: FlattenedTreeItem["parentId"],
+export const sortTree = <T extends Record<string, unknown>>(
+  tree: Tree<T>,
+  fromItem: FlattenedTreeItem<T>,
+  newParentIdOfFromItem: FlattenedTreeItem<T>["parentId"],
   toId: NodeId,
-): Tree => {
+): Tree<T> => {
   const flattenedTree = flattenTree(tree);
 
   const descendantIds = getDescendantIds(flattenedTree, fromItem.id);
   if (descendantIds.some((id) => id === newParentIdOfFromItem))
     return buildTree(flattenedTree);
 
-  const newFromItem: FlattenedTreeItem = {
+  const newFromItem: FlattenedTreeItem<T> = {
     ...fromItem,
     parentId: newParentIdOfFromItem,
   };

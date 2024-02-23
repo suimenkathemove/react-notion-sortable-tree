@@ -1,11 +1,11 @@
 import { Node, NodeId, Tree } from "@/types/tree";
 
-export const updateNode = (
-  tree: Tree,
+export const updateNode = <T extends Record<string, unknown>>(
+  tree: Tree<T>,
   id: NodeId,
-  newNode: (node: Node) => Node,
-): Tree => {
-  const dfs = (node: Node): Node => {
+  newNode: (node: Node<T>) => Node<T>,
+): Tree<T> => {
+  const dfs = (node: Node<T>): Node<T> => {
     if (node.id === id) return newNode(node);
 
     return {
