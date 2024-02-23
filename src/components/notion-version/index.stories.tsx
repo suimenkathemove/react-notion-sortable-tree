@@ -166,7 +166,6 @@ export const Default: StoryObj = {
     return (
       <NotionVersion
         tree={tree}
-        setTree={setTree}
         onClickCollapse={onClickCollapse}
         onClickAddRoot={onClickAddRoot}
         onClickAddChild={onClickAddChild}
