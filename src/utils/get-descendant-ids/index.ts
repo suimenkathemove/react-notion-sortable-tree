@@ -2,8 +2,8 @@ import { findIndex, invariant } from "@suimenkathemove/utils";
 
 import { FlattenedTreeItem, NodeId } from "@/types/tree";
 
-export const getDescendantIds = (
-  flattenedTree: FlattenedTreeItem[],
+export const getDescendantIds = <T extends Record<string, unknown>>(
+  flattenedTree: FlattenedTreeItem<T>[],
   targetId: NodeId,
 ): NodeId[] => {
   const targetIndex = findIndex(flattenedTree, (item) => item.id === targetId);

@@ -1,16 +1,18 @@
 export type NodeId = string;
 
-export type Node = {
+export type Node<T extends Record<string, unknown>> = {
   id: NodeId;
-  children: Node[];
-  collapsed?: boolean;
+  children: Node<T>[];
+  collapsed: boolean;
+  data: T;
 };
 
-export type Tree = Node & { id: "root" };
+export type Tree<T extends Record<string, unknown>> = Node<T>[];
 
-export type FlattenedTreeItem = {
+export type FlattenedTreeItem<T extends Record<string, unknown>> = {
   id: NodeId;
-  parentId: NodeId;
+  parentId: NodeId | null;
   depth: number;
-  collapsed?: boolean;
+  collapsed: boolean;
+  data: T;
 };

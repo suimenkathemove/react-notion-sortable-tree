@@ -1,6 +1,6 @@
 {
   "name": "react-notion-sortable-tree",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "TODO",
   "keywords": [
     "react",
@@ -27,6 +27,7 @@
     "pub": "pnpm build && pnpm publish"
   },
   "dependencies": {
+    "@suimenkathemove/react-library": "^0.1.6",
     "@suimenkathemove/utils": "^0.1.6",
     "react-feather": "^2.0.10"
   },
@@ -49,6 +50,7 @@
     "@types/node": "^20.11.19",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
+    "@types/uuid": "^9.0.8",
     "destyle.css": "^4.0.0",
     "esbuild": "^0.20.0",
     "react": "18.2.0",
@@ -57,6 +59,7 @@
     "ts-node": "^10.9.2",
     "typescript": "5.2.2",
     "typesync": "^0.11.1",
+    "uuid": "^9.0.1",
     "vitest": "^1.3.0"
   },
   "peerDependencies": {

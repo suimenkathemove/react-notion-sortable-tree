@@ -1,88 +1,249 @@
+import {
+  ContentProps,
+  Popover,
+  TriggerProps,
+} from "@suimenkathemove/react-library";
 import { forwardRef } from "react";
-import { ChevronDown, ChevronRight } from "react-feather";
+import {
+  ChevronDown,
+  ChevronRight,
+  Edit,
+  Menu,
+  Plus,
+  Trash2,
+} from "react-feather";
 
 import {
   ContainerProps,
   ItemProps,
+  MoveTarget,
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
-import { Tree } from "@/types/tree";
+import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+
+const characterStyle: React.CSSProperties = {
+  fontFamily: "BlinkMacSystemFont, sans-serif",
+  fontSize: 14,
+  fontWeight: 500,
+  color: "rgba(25, 23, 17, 0.6)",
+};
+
+const ICON_SIZE = 16;
+
+type Data = {
+  title: string;
+};
 
 export interface NotionVersionProps {
-  tree: Tree;
-  setTree: (tree: Tree) => void;
+  tree: Tree<Data>;
+  setTree: (tree: Tree<Data>) => void;
+  onClickCollapse: (item: FlattenedTreeItem<Data>) => void;
+  onClickAddRoot: () => void;
+  onClickAddChild: (id: NodeId) => void;
+  onClickRename: (item: FlattenedTreeItem<Data>) => void;
+  onClickDelete: (id: NodeId) => void;
+  onMove: (
+    fromItem: FlattenedTreeItem<Data>,
+    toParentId: FlattenedTreeItem<Data>["parentId"],
+    toIndex: number,
+    target: MoveTarget,
+  ) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
   return (
-    <ReactNotionSortableTree
-      tree={props.tree}
-      setTree={props.setTree}
-      Container={forwardRef<HTMLUListElement, ContainerProps<HTMLUListElement>>(
-        (props, ref) => (
-          <ul
-            style={{
-              ...props.style,
-              width: 240,
-              backgroundColor: "rgb(251 251 250)",
-            }}
-            ref={ref}
-          >
-            {props.children}
-          </ul>
-        ),
-      )}
-      Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
-        (props, ref) => (
-          <li
-            onPointerDown={props.onPointerDown}
-            style={{
-              ...props.style,
-              display: "flex",
-              alignItems: "center",
-              paddingTop: 2,
-              paddingBottom: 2,
-              paddingLeft: 8 + props.paddingLeft,
-              paddingRight: 8,
-              fontFamily: "BlinkMacSystemFont, sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              color: "rgba(25, 23, 17, 0.6)",
-            }}
-            ref={ref}
-          >
-            <button
-              onClick={() => {
-                props.onCollapse();
-              }}
-              onPointerDown={(event) => {
-                event.stopPropagation();
-              }}
+    <div
+      style={{
+        width: 240,
+        backgroundColor: "rgb(251 251 250)",
+      }}
+    >
+      <ReactNotionSortableTree
+        tree={props.tree}
+        Container={forwardRef<HTMLUListElement, ContainerProps>(
+          (containerProps, ref) => (
+            <ul style={containerProps.style} ref={ref}>
+              {containerProps.children}
+            </ul>
+          ),
+        )}
+        Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement, Data>>(
+          (itemProps, ref) => (
+            <li
+              onPointerDown={itemProps.onPointerDown}
               style={{
+                ...itemProps.style,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                width: 22,
-                height: 22,
-                marginRight: 4,
+                gap: 4,
+                paddingTop: 2,
+                paddingBottom: 2,
+                paddingLeft: 8 + itemProps.paddingLeft,
+                paddingRight: 8,
+                ...characterStyle,
               }}
+              ref={ref}
             >
-              {props.item.collapsed ? (
-                <ChevronRight size={20} />
-              ) : (
-                <ChevronDown size={20} />
-              )}
-            </button>
-            {props.item.id}
-          </li>
-        ),
-      )}
-      itemHeight={28}
-      paddingPerDepth={24}
-      backgroundColor="rgba(35, 131, 226, 0.14)"
-      borderHeight={4}
-      borderColor="rgba(35, 131, 226, 0.43)"
-    />
+              <button
+                onClick={() => {
+                  props.onClickCollapse(itemProps.item);
+                }}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                }}
+                style={{
+                  flexGrow: 0,
+                  flexShrink: 0,
+                }}
+              >
+                {itemProps.item.collapsed ? (
+                  <ChevronRight size={ICON_SIZE} />
+                ) : (
+                  <ChevronDown size={ICON_SIZE} />
+                )}
+              </button>
+              <div
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {itemProps.item.data.title || "Untitled"}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  marginLeft: "auto",
+                }}
+              >
+                <Popover
+                  Trigger={forwardRef<HTMLButtonElement, TriggerProps>(
+                    (triggerProps, ref) => (
+                      <button
+                        onClick={triggerProps.onClick}
+                        onPointerDown={(event) => {
+                          event.stopPropagation();
+                        }}
+                        style={{
+                          flexGrow: 0,
+                          flexShrink: 0,
+                        }}
+                        ref={ref}
+                      >
+                        <Menu size={ICON_SIZE} />
+                      </button>
+                    ),
+                  )}
+                  Content={forwardRef<HTMLDivElement, ContentProps>(
+                    (contentProps, ref) => (
+                      <div
+                        onPointerDown={(event) => {
+                          event.stopPropagation();
+                        }}
+                        style={{
+                          ...contentProps.style,
+                          width: 265,
+                          padding: "6px 0",
+                          backgroundColor: "white",
+                          borderRadius: 6,
+                          boxShadow:
+                            "rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px",
+                          ...characterStyle,
+                        }}
+                        ref={ref}
+                      >
+                        <div
+                          style={{
+                            padding: "0 4px",
+                          }}
+                        >
+                          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                          <div
+                            onClick={() => {
+                              props.onClickDelete(itemProps.item.id);
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              height: 28,
+                              padding: "0 10px",
+                            }}
+                          >
+                            <Trash2 size={ICON_SIZE} />
+                            Delete
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            padding: "0 4px",
+                          }}
+                        >
+                          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                          <div
+                            onClick={() => {
+                              props.onClickRename(itemProps.item);
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              height: 28,
+                              padding: "0 10px",
+                            }}
+                          >
+                            <Edit size={ICON_SIZE} />
+                            Rename
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  positionType="right-top"
+                />
+                <button
+                  onClick={() => {
+                    props.onClickAddChild(itemProps.item.id);
+                  }}
+                  onPointerDown={(event) => {
+                    event.stopPropagation();
+                  }}
+                  style={{
+                    flexGrow: 0,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Plus size={ICON_SIZE} />
+                </button>
+              </div>
+            </li>
+          ),
+        )}
+        onMove={props.onMove}
+        itemHeight={28}
+        paddingPerDepth={24}
+        backgroundColor="rgba(35, 131, 226, 0.14)"
+        borderHeight={4}
+        borderColor="rgba(35, 131, 226, 0.43)"
+      />
+      <button
+        onClick={props.onClickAddRoot}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 4,
+          width: "100%",
+          padding: "2px 8px",
+          ...characterStyle,
+        }}
+      >
+        <Plus size={ICON_SIZE} />
+        Add a page
+      </button>
+    </div>
   );
 };
