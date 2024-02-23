@@ -19,8 +19,8 @@ export const flattenTree = (tree: Tree): FlattenedTreeItem[] => {
       flatten(c, node.id, depth + 1);
     });
   };
-  tree.children.forEach((c) => {
-    flatten(c, tree.id);
+  tree.forEach((c) => {
+    flatten(c, null);
   });
 
   return flattenedTree;

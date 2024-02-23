@@ -32,14 +32,11 @@ export const Default: StoryObj = {
     useEffect(() => {
       void (async () => {
         const roots = await backendApi.listNodes();
-        const newTree: Tree = {
-          id: "root",
-          children: roots.map((r) => ({
-            id: r.id,
-            children: [],
-            collapsed: true,
-          })),
-        };
+        const newTree: Tree = roots.map((r) => ({
+          id: r.id,
+          children: [],
+          collapsed: true,
+        }));
         setTree(newTree);
       })();
     }, []);
@@ -75,16 +72,13 @@ export const Default: StoryObj = {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useCallback(async () => {
         const newNode = await backendApi.addNode(null);
-        const newTree: Tree = {
-          id: "root",
-          children: tree.children.concat({
-            id: newNode.id,
-            children: [],
-            collapsed: true,
-          }),
-        };
+        const newTree: Tree = tree.concat({
+          id: newNode.id,
+          children: [],
+          collapsed: true,
+        });
         setTree(newTree);
-      }, [tree.children]);
+      }, [tree]);
 
     const onClickAddChild: NotionVersionProps["onClickAddChild"] =
       // eslint-disable-next-line react-hooks/rules-of-hooks

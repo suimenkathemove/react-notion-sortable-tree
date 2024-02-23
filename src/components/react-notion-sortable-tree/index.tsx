@@ -192,8 +192,10 @@ export const ReactNotionSortableTree = <
 
     if (fromItem == null || borderOrBackground == null) return;
 
-    const sortTreeWrapper = (newParentIdOfFromItem: NodeId, toId: NodeId) =>
-      sortTree(props.tree, fromItem, newParentIdOfFromItem, toId);
+    const sortTreeWrapper = (
+      newParentIdOfFromItem: FlattenedTreeItem["parentId"],
+      toId: NodeId,
+    ) => sortTree(props.tree, fromItem, newParentIdOfFromItem, toId);
 
     switch (borderOrBackground.type) {
       case "border":
@@ -251,7 +253,7 @@ export const ReactNotionSortableTree = <
           const lastIndex = collapsedFlattenedTree.length - 1;
           const lastItem = collapsedFlattenedTree[lastIndex];
           invariant(lastItem != null, "lastItem should exist");
-          const newParentIdOfFromItem = ((): NodeId => {
+          const newParentIdOfFromItem = ((): FlattenedTreeItem["parentId"] => {
             const lastDescendantIndex = getLastDescendantIndex(
               collapsedFlattenedTree,
               fromItem.id,

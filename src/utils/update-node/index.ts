@@ -14,8 +14,5 @@ export const updateNode = (
     };
   };
 
-  return {
-    id: "root",
-    children: tree.children.map(dfs),
-  };
+  return tree.map(dfs);
 };

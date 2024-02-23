@@ -6,14 +6,11 @@ export type Node = {
   collapsed: boolean;
 };
 
-export type Tree = {
-  id: "root";
-  children: Node[];
-};
+export type Tree = Node[];
 
 export type FlattenedTreeItem = {
   id: NodeId;
-  parentId: NodeId;
+  parentId: NodeId | null;
   depth: number;
   collapsed: boolean;
 };

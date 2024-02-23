@@ -6,8 +6,5 @@ export const removeNode = (tree: Tree, id: NodeId): Tree => {
     children: node.children.filter((c) => c.id !== id).map(dfs),
   });
 
-  return {
-    id: "root",
-    children: tree.children.filter((c) => c.id !== id).map(dfs),
-  };
+  return tree.filter((c) => c.id !== id).map(dfs);
 };

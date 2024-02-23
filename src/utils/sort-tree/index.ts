@@ -8,13 +8,13 @@ import { getDescendantIds } from "@/utils/get-descendant-ids";
 export const sortTree = (
   tree: Tree,
   fromItem: FlattenedTreeItem,
-  newParentIdOfFromItem: NodeId,
+  newParentIdOfFromItem: FlattenedTreeItem["parentId"],
   toId: NodeId,
 ): Tree => {
   const flattenedTree = flattenTree(tree);
 
   const descendantIds = getDescendantIds(flattenedTree, fromItem.id);
-  if (descendantIds.includes(newParentIdOfFromItem))
+  if (descendantIds.some((id) => id === newParentIdOfFromItem))
     return buildTree(flattenedTree);
 
   const newFromItem: FlattenedTreeItem = {
