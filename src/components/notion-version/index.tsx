@@ -43,14 +43,13 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
       <ReactNotionSortableTree
         tree={props.tree}
         setTree={props.setTree}
-        Container={forwardRef<
-          HTMLUListElement,
-          ContainerProps<HTMLUListElement>
-        >((containerProps, ref) => (
-          <ul style={containerProps.style} ref={ref}>
-            {containerProps.children}
-          </ul>
-        ))}
+        Container={forwardRef<HTMLUListElement, ContainerProps>(
+          (containerProps, ref) => (
+            <ul style={containerProps.style} ref={ref}>
+              {containerProps.children}
+            </ul>
+          ),
+        )}
         Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
           (itemProps, ref) => (
             <li

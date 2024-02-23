@@ -32,20 +32,19 @@ export const Default: StoryObj = {
         <ReactNotionSortableTree
           tree={tree}
           setTree={setTree}
-          Container={forwardRef<
-            HTMLUListElement,
-            ContainerProps<HTMLUListElement>
-          >((props, ref) => (
-            <ul
-              style={{
-                ...props.style,
-                width: 240,
-              }}
-              ref={ref}
-            >
-              {props.children}
-            </ul>
-          ))}
+          Container={forwardRef<HTMLUListElement, ContainerProps>(
+            (props, ref) => (
+              <ul
+                style={{
+                  ...props.style,
+                  width: 240,
+                }}
+                ref={ref}
+              >
+                {props.children}
+              </ul>
+            ),
+          )}
           Item={forwardRef<HTMLLIElement, ItemProps<HTMLLIElement>>(
             (props, ref) => (
               <li

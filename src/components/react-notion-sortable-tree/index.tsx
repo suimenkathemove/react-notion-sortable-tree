@@ -29,9 +29,8 @@ interface Coordinate {
   y: number;
 }
 
-export interface ContainerProps<ContainerElement extends HTMLElement> {
+export interface ContainerProps {
   style: React.CSSProperties;
-  ref: React.RefObject<ContainerElement>;
   children: React.ReactNode;
 }
 
@@ -41,7 +40,6 @@ export interface ItemProps<ItemElement extends HTMLElement> {
   item: FlattenedTreeItem;
   paddingLeft: number;
   onCollapse: () => void;
-  ref: React.RefObject<ItemElement>;
 }
 
 export interface ReactNotionSortableTreeProps<
@@ -51,7 +49,7 @@ export interface ReactNotionSortableTreeProps<
   tree: Tree;
   setTree: (tree: Tree) => void;
   Container: React.ForwardRefExoticComponent<
-    React.PropsWithoutRef<ContainerProps<ContainerElement>> &
+    React.PropsWithoutRef<ContainerProps> &
       React.RefAttributes<ContainerElement>
   >;
   Item: React.ForwardRefExoticComponent<
