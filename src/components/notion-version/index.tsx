@@ -42,12 +42,7 @@ export interface NotionVersionProps {
   onClickAddChild: (id: NodeId) => void;
   onClickRename: (item: FlattenedTreeItem<Data>) => void;
   onClickDelete: (id: NodeId) => void;
-  onMove: (
-    fromItem: FlattenedTreeItem<Data>,
-    toParentId: FlattenedTreeItem<Data>["parentId"],
-    toIndex: number,
-    target: MoveTarget,
-  ) => void;
+  onMove: (fromItem: FlattenedTreeItem<Data>, target: MoveTarget) => void;
 }
 
 export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
@@ -109,7 +104,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {itemProps.item.data.title || "Untitled"}
+                {itemProps.item.id || "Untitled"}
               </div>
               <div
                 style={{

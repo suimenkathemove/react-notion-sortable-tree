@@ -1,3 +1,5 @@
+import { invariant } from "@suimenkathemove/utils";
+
 import { FlattenedTreeItem, Node, NodeId, Tree } from "@/types/tree";
 
 export const buildTree = <T extends Record<string, unknown>>(
@@ -11,7 +13,7 @@ export const buildTree = <T extends Record<string, unknown>>(
       collapsed: item.collapsed,
       data: item.data,
     }));
-  const map: Record<NodeId, Node<T>> = tree.reduce(
+  const nodeMap: Record<NodeId, Node<T>> = tree.reduce(
     (acc, item) => ({ ...acc, [item.id]: item }),
     {},
   );
@@ -19,25 +21,16 @@ export const buildTree = <T extends Record<string, unknown>>(
   flattenedTree.forEach((item) => {
     const { parentId } = item;
     if (parentId == null) return;
-    if (!map[parentId]) {
-      map[parentId] = {
-        id: parentId,
-        children: [],
-        collapsed: true,
-        data: {} as T,
-      };
-    }
-    const parent = map[parentId]!;
+    const parent = nodeMap[parentId];
+    invariant(parent != null, "parent should exist");
 
-    if (!map[item.id]) {
-      map[item.id] = {
-        id: item.id,
-        children: [],
-        collapsed: item.collapsed,
-        data: item.data,
-      };
-    }
-    const node = map[item.id]!;
+    const node: Node<T> = {
+      id: item.id,
+      children: [],
+      collapsed: item.collapsed,
+      data: item.data,
+    };
+    nodeMap[node.id] = node;
 
     parent.children.push(node);
   });

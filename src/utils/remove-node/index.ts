@@ -3,11 +3,24 @@ import { Node, NodeId, Tree } from "@/types/tree";
 export const removeNode = <T extends Record<string, unknown>>(
   tree: Tree<T>,
   id: NodeId,
-): Tree<T> => {
-  const dfs = (node: Node<T>): Node<T> => ({
-    ...node,
-    children: node.children.filter((c) => c.id !== id).map(dfs),
-  });
+): [removedTree: Tree<T>, removedNode: Node<T> | null] => {
+  let removedNode: Node<T> | null = null;
 
-  return tree.filter((c) => c.id !== id).map(dfs);
+  const dfs = (nodes: Node<T>[]): Node<T>[] =>
+    nodes
+      .filter((node) => {
+        if (node.id === id) {
+          removedNode = node;
+
+          return false;
+        }
+
+        return true;
+      })
+      .map((node) => ({
+        ...node,
+        children: dfs(node.children),
+      }));
+
+  return [dfs(tree), removedNode];
 };

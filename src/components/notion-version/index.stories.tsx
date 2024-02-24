@@ -1,5 +1,5 @@
 import { StoryObj } from "@storybook/react";
-import { range } from "@suimenkathemove/utils";
+import { invariant, range } from "@suimenkathemove/utils";
 import { useCallback, useEffect, useState } from "react";
 import * as uuid from "uuid";
 
@@ -7,12 +7,135 @@ import { MoveTarget } from "../react-notion-sortable-tree";
 
 import { NotionVersion, NotionVersionProps } from ".";
 
+import { tree as mockTree } from "@/__mocks__/tree";
 import { NodeId, Tree } from "@/types/tree";
+import { addNodeToParent } from "@/utils/add-node-to-parent";
+import { addNodeToSibling } from "@/utils/add-node-to-sibling";
 import { removeNode } from "@/utils/remove-node";
-import { sortTree } from "@/utils/sort-tree";
 import { updateNode } from "@/utils/update-node";
 
 export default {};
+
+type Data = {
+  title: string;
+};
+
+export const Default: StoryObj = {
+  render: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [tree, setTree] = useState<Tree<Data>>(mockTree as Tree<Data>);
+
+    const onClickCollapse: NotionVersionProps["onClickCollapse"] =
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCallback(
+        async (item) => {
+          if (item.collapsed) {
+            const newTree = updateNode(tree, item.id, (node) => ({
+              ...node,
+              collapsed: false,
+            }));
+            setTree(newTree);
+          } else {
+            const newTree = updateNode(tree, item.id, (node) => ({
+              ...node,
+              collapsed: true,
+            }));
+            setTree(newTree);
+          }
+        },
+        [tree],
+      );
+
+    const onClickAddRoot: NotionVersionProps["onClickAddRoot"] =
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCallback(async () => {
+        const newTree: Tree<Data> = tree.concat({
+          id: uuid.v4(),
+          children: [],
+          collapsed: true,
+          data: {
+            title: "",
+          },
+        });
+        setTree(newTree);
+      }, [tree]);
+
+    const onClickAddChild: NotionVersionProps["onClickAddChild"] =
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCallback(
+        async (id) => {
+          const newTree = updateNode(tree, id, (node) => ({
+            ...node,
+            children: node.children.concat({
+              id: uuid.v4(),
+              children: [],
+              collapsed: true,
+              data: {
+                title: "",
+              },
+            }),
+            collapsed: false,
+          }));
+          setTree(newTree);
+        },
+        [tree],
+      );
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const onClickRename: NotionVersionProps["onClickRename"] = useCallback(
+      async (item) => {
+        const value = window.prompt("", item.data.title) ?? "";
+        const newTree = updateNode(tree, item.id, (node) => ({
+          ...node,
+          data: {
+            title: value,
+          },
+        }));
+        setTree(newTree);
+      },
+      [tree],
+    );
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const onClickDelete: NotionVersionProps["onClickDelete"] = useCallback(
+      async (id) => {
+        const [newTree] = removeNode(tree, id);
+        setTree(newTree);
+      },
+      [tree],
+    );
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const onMove: NotionVersionProps["onMove"] = useCallback(
+      async (fromItem, target) => {
+        const [removedTree, removedNode] = removeNode(tree, fromItem.id);
+        invariant(removedNode != null, "removedNode should exist");
+        const newTree =
+          target.type === "parent"
+            ? addNodeToParent(removedTree, target.id, removedNode)
+            : addNodeToSibling(
+                removedTree,
+                { type: target.type, id: target.id },
+                removedNode,
+              );
+        setTree(newTree);
+      },
+      [tree],
+    );
+
+    return (
+      <NotionVersion
+        tree={tree}
+        onClickCollapse={onClickCollapse}
+        onClickAddRoot={onClickAddRoot}
+        onClickAddChild={onClickAddChild}
+        onClickRename={onClickRename}
+        onClickDelete={onClickDelete}
+        onMove={onMove}
+      />
+    );
+  },
+};
 
 const backendApi = {
   listNodes: async (): Promise<{ id: NodeId }[]> =>
@@ -35,11 +158,7 @@ const backendApi = {
   moveNode: async (id: NodeId, _target: MoveTarget): Promise<NodeId> => id,
 };
 
-type Data = {
-  title: string;
-};
-
-export const Default: StoryObj = {
+export const WithBackendApi: StoryObj = {
   render: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [tree, setTree] = useState<Tree<Data>>([]);
@@ -147,7 +266,7 @@ export const Default: StoryObj = {
     const onClickDelete: NotionVersionProps["onClickDelete"] = useCallback(
       async (id) => {
         await backendApi.removeNode(id);
-        const newTree = removeNode(tree, id);
+        const [newTree] = removeNode(tree, id);
         setTree(newTree);
       },
       [tree],
@@ -155,9 +274,18 @@ export const Default: StoryObj = {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const onMove: NotionVersionProps["onMove"] = useCallback(
-      async (fromItem, toParentId, toIndex, target) => {
+      async (fromItem, target) => {
         await backendApi.moveNode(fromItem.id, target);
-        const newTree = sortTree(tree, fromItem, toParentId, toIndex);
+        const [removedTree, removedNode] = removeNode(tree, fromItem.id);
+        invariant(removedNode != null, "removedNode should exist");
+        const newTree =
+          target.type === "parent"
+            ? addNodeToParent(removedTree, target.id, removedNode)
+            : addNodeToSibling(
+                removedTree,
+                { type: target.type, id: target.id },
+                removedNode,
+              );
         setTree(newTree);
       },
       [tree],
