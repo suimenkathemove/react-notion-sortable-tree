@@ -16,3 +16,8 @@ export type FlattenedTreeItem<T extends Record<string, unknown>> = {
   collapsed: boolean;
   data: T;
 };
+
+export type MoveTarget = {
+  type: "parent" | "siblingParent" | "siblingChild";
+  id: NodeId;
+};

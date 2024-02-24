@@ -1,16 +1,13 @@
 import { StoryObj } from "@storybook/react";
-import { invariant, range } from "@suimenkathemove/utils";
+import { range } from "@suimenkathemove/utils";
 import { useCallback, useEffect, useState } from "react";
 import * as uuid from "uuid";
-
-import { MoveTarget } from "../react-notion-sortable-tree";
 
 import { NotionVersion, NotionVersionProps } from ".";
 
 import { tree as mockTree } from "@/__mocks__/tree";
-import { NodeId, Tree } from "@/types/tree";
-import { addNodeToParent } from "@/utils/add-node-to-parent";
-import { addNodeToSibling } from "@/utils/add-node-to-sibling";
+import { MoveTarget, NodeId, Tree } from "@/types/tree";
+import { moveNode } from "@/utils/move-node";
 import { removeNode } from "@/utils/remove-node";
 import { updateNode } from "@/utils/update-node";
 
@@ -108,16 +105,7 @@ export const Default: StoryObj = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const onMove: NotionVersionProps["onMove"] = useCallback(
       async (fromItem, target) => {
-        const [removedTree, removedNode] = removeNode(tree, fromItem.id);
-        invariant(removedNode != null, "removedNode should exist");
-        const newTree =
-          target.type === "parent"
-            ? addNodeToParent(removedTree, target.id, removedNode)
-            : addNodeToSibling(
-                removedTree,
-                { type: target.type, id: target.id },
-                removedNode,
-              );
+        const newTree = moveNode(tree, fromItem.id, target);
         setTree(newTree);
       },
       [tree],
@@ -276,16 +264,7 @@ export const WithBackendApi: StoryObj = {
     const onMove: NotionVersionProps["onMove"] = useCallback(
       async (fromItem, target) => {
         await backendApi.moveNode(fromItem.id, target);
-        const [removedTree, removedNode] = removeNode(tree, fromItem.id);
-        invariant(removedNode != null, "removedNode should exist");
-        const newTree =
-          target.type === "parent"
-            ? addNodeToParent(removedTree, target.id, removedNode)
-            : addNodeToSibling(
-                removedTree,
-                { type: target.type, id: target.id },
-                removedNode,
-              );
+        const newTree = moveNode(tree, fromItem.id, target);
         setTree(newTree);
       },
       [tree],

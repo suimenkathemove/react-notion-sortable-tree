@@ -11,7 +11,7 @@ import {
 import { createPortal } from "react-dom";
 
 import { BorderOrBackground } from "@/types/coordinate";
-import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types/tree";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
@@ -36,11 +36,6 @@ export interface ItemProps<
   item: FlattenedTreeItem<Data>;
   paddingLeft: number;
 }
-
-export type MoveTarget = {
-  type: "parent" | "siblingParent" | "siblingChild";
-  id: NodeId;
-};
 
 export interface ReactNotionSortableTreeProps<
   ContainerElement extends HTMLElement,
