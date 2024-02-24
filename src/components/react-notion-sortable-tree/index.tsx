@@ -1,9 +1,4 @@
-import {
-  findIndex,
-  findLastIndex,
-  invariant,
-  range,
-} from "@suimenkathemove/utils";
+import { findIndex, invariant, range } from "@suimenkathemove/utils";
 import {
   createRef,
   useCallback,
@@ -16,8 +11,9 @@ import {
 import { createPortal } from "react-dom";
 
 import { BorderOrBackground } from "@/types/coordinate";
-import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types/tree";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
+import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
 
@@ -41,11 +37,6 @@ export interface ItemProps<
   paddingLeft: number;
 }
 
-export type MoveTarget = {
-  type: "parent" | "siblingParent" | "siblingChild";
-  id: NodeId;
-};
-
 export interface ReactNotionSortableTreeProps<
   ContainerElement extends HTMLElement,
   ItemElement extends HTMLElement,
@@ -60,12 +51,7 @@ export interface ReactNotionSortableTreeProps<
     React.PropsWithoutRef<ItemProps<ItemElement, Data>> &
       React.RefAttributes<ItemElement>
   >;
-  onMove: (
-    fromItem: FlattenedTreeItem<Data>,
-    toParentId: FlattenedTreeItem<Data>["parentId"],
-    toIndex: number,
-    target: MoveTarget,
-  ) => void;
+  onMove: (fromItem: FlattenedTreeItem<Data>, target: MoveTarget) => void;
   itemHeight?: number;
   paddingPerDepth?: number;
   backgroundColor?: string;
@@ -127,15 +113,13 @@ export const ReactNotionSortableTree = <
     const movingDistance =
       pointerCoordinate.y -
       containerElementRef.current.getBoundingClientRect().top;
+
     const upperIndex = findIndex(
       range(collapsedFlattenedTree.length),
       (index) =>
         itemHeight * index - heightDisplayBorder <= movingDistance &&
         movingDistance <= itemHeight * index + heightDisplayBorder,
     );
-    const lastBorder =
-      itemHeight * collapsedFlattenedTree.length - heightDisplayBorder <=
-      movingDistance;
     if (upperIndex != null) {
       const upperItem = collapsedFlattenedTree[upperIndex];
       invariant(upperItem != null, "upperItem should exist");
@@ -149,12 +133,18 @@ export const ReactNotionSortableTree = <
         return null;
 
       return { type: "border", index: upperIndex };
-    } else if (lastBorder) {
+    }
+
+    const lastBorder =
+      itemHeight * collapsedFlattenedTree.length - heightDisplayBorder <=
+      movingDistance;
+    if (lastBorder) {
       return { type: "lastBorder" };
-    } else {
-      const backgroundIndex = Math.floor(movingDistance / itemHeight);
-      const backgroundItem = collapsedFlattenedTree[backgroundIndex];
-      invariant(backgroundItem != null, "backgroundItem should exist");
+    }
+
+    const backgroundIndex = Math.floor(movingDistance / itemHeight);
+    const backgroundItem = collapsedFlattenedTree[backgroundIndex];
+    if (backgroundItem != null) {
       if (
         getDescendantIds(collapsedFlattenedTree, fromItem.id).includes(
           backgroundItem.id,
@@ -164,6 +154,8 @@ export const ReactNotionSortableTree = <
 
       return { type: "background", index: backgroundIndex };
     }
+
+    return null;
   }, [
     collapsedFlattenedTree,
     fromItem,
@@ -195,6 +187,17 @@ export const ReactNotionSortableTree = <
     });
   }, []);
 
+  const onMove = useCallback(
+    (target: MoveTarget) => {
+      if (fromItem == null) return;
+      const flattenedTree = flattenTree(props.tree);
+      const descendantIds = getDescendantIds(flattenedTree, fromItem.id);
+      if (descendantIds.some((id) => id === target.id)) return;
+      props.onMove(fromItem, target);
+    },
+    [fromItem, props],
+  );
+
   const onPointerUp = useCallback(() => {
     setFromItem(null);
 
@@ -212,10 +215,7 @@ export const ReactNotionSortableTree = <
           if (borderIndex === 0) {
             const firstItem = collapsedFlattenedTree[borderIndex];
             invariant(firstItem != null, "toItem should exist");
-            props.onMove(fromItem, null, borderIndex, {
-              type: "siblingChild",
-              id: firstItem.id,
-            });
+            onMove({ type: "siblingChild", id: firstItem.id });
           } else {
             const upperItem = collapsedFlattenedTree[borderIndex - 1];
             invariant(upperItem != null, "upperItem should exist");
@@ -233,28 +233,12 @@ export const ReactNotionSortableTree = <
                 (item) => item.id === fromItem.parentId,
               );
               if (parentItem == null) return;
-              props.onMove(fromItem, parentItem.parentId, lastDescendantIndex, {
-                type: "siblingParent",
-                id: parentItem.id,
-              });
+              onMove({ type: "siblingParent", id: parentItem.id });
             } else {
-              const fromIndex = findIndex(
-                collapsedFlattenedTree,
-                (item) => item.id === fromItem.id,
-              );
-              invariant(fromIndex != null, "fromIndex should exist");
-              const toIndex =
-                borderIndex > fromIndex ? borderIndex - 1 : borderIndex;
               if (lowerItem.depth > upperItem.depth) {
-                props.onMove(fromItem, lowerItem.parentId, toIndex, {
-                  type: "siblingChild",
-                  id: lowerItem.id,
-                });
+                onMove({ type: "siblingChild", id: lowerItem.id });
               } else {
-                props.onMove(fromItem, upperItem.parentId, toIndex, {
-                  type: "siblingParent",
-                  id: upperItem.id,
-                });
+                onMove({ type: "siblingParent", id: upperItem.id });
               }
             }
           }
@@ -276,15 +260,9 @@ export const ReactNotionSortableTree = <
               (item) => item.id === fromItem.parentId,
             );
             if (parentItem == null) return;
-            props.onMove(fromItem, parentItem.parentId, lastIndex, {
-              type: "siblingParent",
-              id: parentItem.id,
-            });
+            onMove({ type: "siblingParent", id: parentItem.id });
           } else {
-            props.onMove(fromItem, lastItem.parentId, lastIndex, {
-              type: "siblingParent",
-              id: lastItem.id,
-            });
+            onMove({ type: "siblingParent", id: lastItem.id });
           }
         }
         break;
@@ -293,26 +271,13 @@ export const ReactNotionSortableTree = <
           const backgroundIndex = borderOrBackground.index;
           const backgroundItem = collapsedFlattenedTree[backgroundIndex];
           invariant(backgroundItem != null, "backgroundItem should exist");
-          const toIndex = ((): number => {
-            const siblingLeafIndexInBackgroundItemChildren = findLastIndex(
-              collapsedFlattenedTree,
-              (item) => item.parentId === backgroundItem.id,
-            );
-
-            return (
-              (siblingLeafIndexInBackgroundItemChildren ?? backgroundIndex) + 1
-            );
-          })();
-          props.onMove(fromItem, backgroundItem.id, toIndex, {
-            type: "parent",
-            id: backgroundItem.id,
-          });
+          onMove({ type: "parent", id: backgroundItem.id });
         }
         break;
       default:
         borderOrBackground satisfies never;
     }
-  }, [borderOrBackground, collapsedFlattenedTree, fromItem, props]);
+  }, [borderOrBackground, collapsedFlattenedTree, fromItem, onMove]);
 
   useEffect(() => {
     window.addEventListener("pointermove", onPointerMove);
