@@ -103,7 +103,7 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {itemProps.item.id || "Untitled"}
+                {itemProps.item.data.title || "Untitled"}
               </div>
               <div
                 style={{
