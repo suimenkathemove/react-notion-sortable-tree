@@ -37,7 +37,6 @@ type Data = {
 
 export interface NotionVersionProps {
   tree: Tree<Data>;
-  setTree: (tree: Tree<Data>) => void;
   onClickCollapse: (item: FlattenedTreeItem<Data>) => void;
   onClickAddRoot: () => void;
   onClickAddChild: (id: NodeId) => void;
