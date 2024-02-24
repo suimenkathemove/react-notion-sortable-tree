@@ -1,6 +1,6 @@
 {
   "name": "react-notion-sortable-tree",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "TODO",
   "keywords": [
     "react",
@@ -15,7 +15,6 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "postinstall": "typesync",
     "tsc": "tsc --noEmit",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{js,jsx,ts,tsx}'",
