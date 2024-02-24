@@ -1,6 +1,6 @@
 import { findIndex, invariant } from "@suimenkathemove/utils";
 
-import { FlattenedTreeItem, NodeId } from "@/types/tree";
+import { FlattenedTreeItem, NodeId } from "@/types";
 
 export const getDescendantIds = <T extends Record<string, unknown>>(
   flattenedTree: FlattenedTreeItem<T>[],

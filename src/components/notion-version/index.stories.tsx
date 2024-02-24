@@ -6,7 +6,7 @@ import * as uuid from "uuid";
 import { NotionVersion, NotionVersionProps } from ".";
 
 import { tree as mockTree } from "@/__mocks__/tree";
-import { MoveTarget, NodeId, Tree } from "@/types/tree";
+import { MoveTarget, NodeId, Tree } from "@/types";
 import { moveNode } from "@/utils/move-node";
 import { removeNode } from "@/utils/remove-node";
 import { updateNode } from "@/utils/update-node";

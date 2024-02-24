@@ -1,6 +1,6 @@
 import { findIndex, invariant } from "@suimenkathemove/utils";
 
-import { Node, NodeId, Tree } from "@/types/tree";
+import { Node, NodeId, Tree } from "@/types";
 
 type TargetType = "siblingParent" | "siblingChild";
 type Target = {

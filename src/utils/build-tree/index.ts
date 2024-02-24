@@ -1,6 +1,6 @@
 import { invariant } from "@suimenkathemove/utils";
 
-import { FlattenedTreeItem, Node, NodeId, Tree } from "@/types/tree";
+import { FlattenedTreeItem, Node, NodeId, Tree } from "@/types";
 
 export const buildTree = <T extends Record<string, unknown>>(
   flattenedTree: FlattenedTreeItem<T>[],
