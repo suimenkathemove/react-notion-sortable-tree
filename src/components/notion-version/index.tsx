@@ -16,11 +16,10 @@ import {
 import {
   ContainerProps,
   ItemProps,
-  MoveTarget,
   ReactNotionSortableTree,
 } from "../react-notion-sortable-tree";
 
-import { FlattenedTreeItem, NodeId, Tree } from "@/types/tree";
+import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types/tree";
 
 const characterStyle: React.CSSProperties = {
   fontFamily: "BlinkMacSystemFont, sans-serif",
