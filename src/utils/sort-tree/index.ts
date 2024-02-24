@@ -1,6 +1,6 @@
 import { arrayMove, findIndex, invariant } from "@suimenkathemove/utils";
 
-import { FlattenedTreeItem, Tree } from "@/types/tree";
+import { FlattenedTreeItem, Tree } from "@/types";
 import { buildTree } from "@/utils/build-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";

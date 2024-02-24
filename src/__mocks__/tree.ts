@@ -1,4 +1,4 @@
-import { Tree } from "@/types/tree";
+import { Tree } from "@/types";
 
 export const tree: Tree<Record<string, unknown>> = [
   {

@@ -4,7 +4,7 @@ import { addNodeToParent } from "../add-node-to-parent";
 import { addNodeToSibling } from "../add-node-to-sibling";
 import { removeNode } from "../remove-node";
 
-import { MoveTarget, NodeId, Tree } from "@/types/tree";
+import { MoveTarget, NodeId, Tree } from "@/types";
 
 export const moveNode = <T extends Record<string, unknown>>(
   tree: Tree<T>,

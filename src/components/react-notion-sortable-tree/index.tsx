@@ -10,8 +10,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { BorderOrBackground } from "@/types/coordinate";
-import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types/tree";
+import { BorderOrBackground } from "./types";
+
+import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";

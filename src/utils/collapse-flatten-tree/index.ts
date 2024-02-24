@@ -1,4 +1,4 @@
-import { FlattenedTreeItem, Node, Tree } from "@/types/tree";
+import { FlattenedTreeItem, Node, Tree } from "@/types";
 
 export const collapseFlattenTree = <T extends Record<string, unknown>>(
   tree: Tree<T>,

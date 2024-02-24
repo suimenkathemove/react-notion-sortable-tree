@@ -1,4 +1,4 @@
-import { FlattenedTreeItem } from "@/types/tree";
+import { FlattenedTreeItem } from "@/types";
 
 export const flattenedTree: FlattenedTreeItem<Record<string, unknown>>[] = [
   { id: "1", parentId: null, depth: 0, collapsed: true, data: {} },

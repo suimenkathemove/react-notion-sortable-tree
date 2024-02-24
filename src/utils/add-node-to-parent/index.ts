@@ -1,6 +1,6 @@
 import { invariant } from "@suimenkathemove/utils";
 
-import { Node, NodeId, Tree } from "@/types/tree";
+import { Node, NodeId, Tree } from "@/types";
 
 export const addNodeToParent = <T extends Record<string, unknown>>(
   tree: Tree<T>,

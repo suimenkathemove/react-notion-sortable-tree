@@ -1,4 +1,4 @@
-import { Node, NodeId, Tree } from "@/types/tree";
+import { Node, NodeId, Tree } from "@/types";
 
 export const updateNode = <T extends Record<string, unknown>>(
   tree: Tree<T>,
