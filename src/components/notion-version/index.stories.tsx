@@ -160,7 +160,7 @@ export const WithBackendApi: StoryObj = {
           children: [],
           collapsed: true,
           data: {
-            title: "",
+            title: r.id,
           },
         }));
         setTree(newTree);
@@ -180,7 +180,7 @@ export const WithBackendApi: StoryObj = {
                 children: [],
                 collapsed: true,
                 data: {
-                  title: "",
+                  title: c.id,
                 },
               })),
               collapsed: false,
