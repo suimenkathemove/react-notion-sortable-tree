@@ -1,6 +1,6 @@
 import { Tree } from "@/types";
 
-export const tree: Tree<Record<string, unknown>> = [
+export const tree: Tree<{ title: string }> = [
   {
     id: "1",
     children: [
@@ -11,39 +11,39 @@ export const tree: Tree<Record<string, unknown>> = [
             id: "10",
             children: [],
             collapsed: true,
-            data: {},
+            data: { title: "10" },
           },
           {
             id: "11",
             children: [],
             collapsed: true,
-            data: {},
+            data: { title: "11" },
           },
           {
             id: "12",
             children: [],
             collapsed: true,
-            data: {},
+            data: { title: "12" },
           },
         ],
         collapsed: true,
-        data: {},
+        data: { title: "4" },
       },
       {
         id: "5",
         children: [],
         collapsed: true,
-        data: {},
+        data: { title: "5" },
       },
       {
         id: "6",
         children: [],
         collapsed: true,
-        data: {},
+        data: { title: "6" },
       },
     ],
     collapsed: true,
-    data: {},
+    data: { title: "1" },
   },
   {
     id: "2",
@@ -52,28 +52,28 @@ export const tree: Tree<Record<string, unknown>> = [
         id: "7",
         children: [],
         collapsed: true,
-        data: {},
+        data: { title: "7" },
       },
       {
         id: "8",
         children: [],
         collapsed: true,
-        data: {},
+        data: { title: "8" },
       },
       {
         id: "9",
         children: [],
         collapsed: true,
-        data: {},
+        data: { title: "9" },
       },
     ],
     collapsed: true,
-    data: {},
+    data: { title: "2" },
   },
   {
     id: "3",
     children: [],
     collapsed: true,
-    data: {},
+    data: { title: "3" },
   },
 ];
