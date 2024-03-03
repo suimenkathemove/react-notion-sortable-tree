@@ -1,7 +1,7 @@
 {
   "name": "react-notion-sortable-tree",
   "version": "0.1.10",
-  "description": "TODO",
+  "description": "This library enables drag & drop like [Notion](https://www.notion.so)'s page tree in sidebar.",
   "keywords": [
     "react",
     "notion",
