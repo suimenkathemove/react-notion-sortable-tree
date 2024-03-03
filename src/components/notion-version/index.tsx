@@ -3,7 +3,7 @@ import {
   Popover,
   TriggerProps,
 } from "@suimenkathemove/react-library";
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import {
   ChevronDown,
   ChevronRight,
@@ -44,7 +44,7 @@ export interface NotionVersionProps {
   onMove: (fromItem: FlattenedTreeItem<Data>, target: MoveTarget) => void;
 }
 
-export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
+export const NotionVersion = memo((props: NotionVersionProps) => {
   return (
     <div
       style={{
@@ -240,4 +240,4 @@ export const NotionVersion: React.FC<NotionVersionProps> = (props) => {
       </button>
     </div>
   );
-};
+});
