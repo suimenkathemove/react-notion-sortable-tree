@@ -1,6 +1,7 @@
 import { findIndex, invariant, range } from "@suimenkathemove/utils";
 import {
   createRef,
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -60,7 +61,7 @@ export interface ReactNotionSortableTreeProps<
   borderColor?: string;
 }
 
-export const ReactNotionSortableTree = <
+export const _ReactNotionSortableTree = <
   ContainerElement extends HTMLElement,
   ItemElement extends HTMLElement,
   Data extends Record<string, unknown>,
@@ -387,3 +388,7 @@ export const ReactNotionSortableTree = <
     </>
   );
 };
+
+export const ReactNotionSortableTree = memo(
+  _ReactNotionSortableTree,
+) as typeof _ReactNotionSortableTree;
