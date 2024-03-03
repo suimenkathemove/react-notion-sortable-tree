@@ -6,9 +6,20 @@ This library enables drag & drop like [Notion](https://www.notion.so)'s page tre
 
 Storybook URL: TODO
 
+## Features
+
+- Flexible Customization
+
+## Installation
+
+```sh
+pnpm install react-notion-sortable-tree
+```
+
 ## Usage
 
-<!-- TODO -->
+- styling: <https://github.com/suimenkathemove/react-notion-sortable-tree/blob/main/src/components/notion-version/index.tsx>
+- logic: <https://github.com/suimenkathemove/react-notion-sortable-tree/blob/main/src/components/notion-version/index.stories.tsx>
 
 ## Running Locally
 
