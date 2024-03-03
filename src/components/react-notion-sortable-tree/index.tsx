@@ -59,6 +59,7 @@ export interface ReactNotionSortableTreeProps<
   backgroundColor?: string;
   borderHeight?: number;
   borderColor?: string;
+  useFromItem?: (fromItem: FlattenedTreeItem<Data> | null) => void;
 }
 
 export const _ReactNotionSortableTree = <
@@ -325,6 +326,8 @@ export const _ReactNotionSortableTree = <
       y: fromRect.y + pointerMovingDistance.y,
     };
   }, [fromItem, pointerMovingDistance]);
+
+  props.useFromItem?.(fromItem);
 
   return (
     <>
