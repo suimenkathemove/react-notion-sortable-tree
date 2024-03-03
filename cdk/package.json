@@ -5,15 +5,19 @@
     "react-notion-sortable-tree": "bin/react-notion-sortable-tree.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "cdk": "cdk"
+    "tsc": "tsc --noEmit",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint --fix '**/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write --log-level=warn '**/*.{js,jsx,ts,tsx,html,gql,graphql,json}'"
   },
   "devDependencies": {
+    "@suimenkathemove/eslint-config": "^0.1.10",
+    "@suimenkathemove/prettier-config": "^0.1.4",
+    "@suimenkathemove/tsconfig": "^0.1.17",
     "@types/node": "20.11.19",
     "aws-cdk": "2.130.0",
     "ts-node": "^10.9.2",
-    "typescript": "~5.3.3"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "aws-cdk-lib": "2.130.0",
