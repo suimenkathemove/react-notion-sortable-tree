@@ -11,18 +11,13 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { BorderOrBackground } from "./types";
+import { BorderOrBackground, Coordinate, Rect } from "./types";
 
 import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
-
-interface Coordinate {
-  x: number;
-  y: number;
-}
 
 export interface ContainerProps {
   style: React.CSSProperties;
@@ -315,7 +310,7 @@ export const _ReactNotionSortableTree = <
     itemHeight,
   ]);
 
-  const ghostMovingDistance = useMemo((): Coordinate | null => {
+  const ghostRect = useMemo((): Rect | null => {
     if (fromItem == null || pointerMovingDistance == null) return null;
     const fromElement = itemElementRefMap.current.get(fromItem.id)?.current;
     invariant(fromElement != null, "fromElement should exist");
@@ -324,6 +319,8 @@ export const _ReactNotionSortableTree = <
     return {
       x: fromRect.x + pointerMovingDistance.x,
       y: fromRect.y + pointerMovingDistance.y,
+      width: fromRect.width,
+      height: fromRect.height,
     };
   }, [fromItem, pointerMovingDistance]);
 
@@ -371,15 +368,16 @@ export const _ReactNotionSortableTree = <
         )}
       </props.Container>
       {fromItem != null &&
-        ghostMovingDistance != null &&
+        ghostRect != null &&
         createPortal(
           <props.Item
             onPointerDown={() => {}}
             style={{
               position: "absolute",
-              top: ghostMovingDistance.y,
-              left: ghostMovingDistance.x,
-              height: itemHeight,
+              top: ghostRect.y,
+              left: ghostRect.x,
+              width: ghostRect.width,
+              height: ghostRect.height,
               paddingLeft: paddingLeft(fromItem.depth),
               opacity: 0.5,
             }}
