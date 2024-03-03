@@ -3,7 +3,7 @@ import {
   Popover,
   TriggerProps,
 } from "@suimenkathemove/react-library";
-import { forwardRef, memo } from "react";
+import { forwardRef, memo, useEffect } from "react";
 import {
   ChevronDown,
   ChevronRight,
@@ -32,6 +32,24 @@ const ICON_SIZE = 16;
 
 type Data = {
   title: string;
+};
+
+const useFromItem = (fromItem: FlattenedTreeItem<Data> | null) => {
+  useEffect(() => {
+    const resetCursor = () => {
+      document.body.style.setProperty("cursor", "");
+    };
+
+    if (fromItem != null) {
+      document.body.style.setProperty("cursor", "grabbing", "important");
+    } else {
+      resetCursor();
+    }
+
+    return () => {
+      resetCursor();
+    };
+  }, [fromItem]);
 };
 
 export interface NotionVersionProps {
@@ -222,6 +240,7 @@ export const NotionVersion = memo((props: NotionVersionProps) => {
         backgroundColor="rgba(35, 131, 226, 0.14)"
         borderHeight={4}
         borderColor="rgba(35, 131, 226, 0.43)"
+        useFromItem={useFromItem}
       />
       <button
         onClick={props.onClickAddRoot}
