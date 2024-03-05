@@ -10,3 +10,13 @@ export type BorderOrBackground =
       type: "background";
       index: number;
     };
+
+export interface Coordinate {
+  x: number;
+  y: number;
+}
+
+export type Rect = Coordinate & {
+  width: number;
+  height: number;
+};

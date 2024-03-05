@@ -1,6 +1,6 @@
 {
   "name": "react-notion-sortable-tree",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "This library enables drag & drop like [Notion](https://www.notion.so)'s page tree in sidebar.",
   "keywords": [
     "react",
@@ -22,7 +22,7 @@
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build": "rm -rf dist && ts-node bin/build.ts && tsc --project tsconfig.build.json",
+    "build": "rm -rf dist && ts-node bin/build.ts && dts-bundle-generator -o dist/index.d.ts src/index.ts --project tsconfig.build.json",
     "pub": "pnpm build && pnpm publish"
   },
   "dependencies": {
@@ -50,6 +50,7 @@
     "@types/react-dom": "18.2.0",
     "@types/uuid": "^9.0.8",
     "destyle.css": "^4.0.0",
+    "dts-bundle-generator": "^9.3.1",
     "esbuild": "^0.20.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
