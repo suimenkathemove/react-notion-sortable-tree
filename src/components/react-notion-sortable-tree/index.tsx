@@ -57,7 +57,7 @@ export interface ReactNotionSortableTreeProps<
   useFromItem?: (fromItem: FlattenedTreeItem<Data> | null) => void;
 }
 
-export const _ReactNotionSortableTree = <
+const _ReactNotionSortableTree = <
   ContainerElement extends HTMLElement,
   ItemElement extends HTMLElement,
   Data extends Record<string, unknown>,
