@@ -4,7 +4,7 @@
 
 This library enables drag & drop like [Notion](https://www.notion.so)'s page tree in sidebar.
 
-Storybook URL: TODO
+Storybook URL: <https://suimenkathemove.github.io/react-notion-sortable-tree>
 
 ## Features
 
