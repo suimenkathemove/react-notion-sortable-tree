@@ -128,6 +128,8 @@ export const NotionVersion = memo((props: NotionVersionProps) => {
                   display: "flex",
                   alignItems: "center",
                   gap: 4,
+                  flexGrow: 0,
+                  flexShrink: 0,
                   marginLeft: "auto",
                 }}
               >
