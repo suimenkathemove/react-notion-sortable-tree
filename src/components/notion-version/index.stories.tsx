@@ -1,4 +1,4 @@
-import { StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { range } from "@suimenkathemove/utils";
 import { useCallback, useEffect, useState } from "react";
 import * as uuid from "uuid";
@@ -11,7 +11,9 @@ import { moveNode } from "@/utils/move-node";
 import { removeNode } from "@/utils/remove-node";
 import { updateNode } from "@/utils/update-node";
 
-export default {};
+export default {
+  title: "NotionVersion",
+} satisfies Meta;
 
 type Data = {
   title: string;
