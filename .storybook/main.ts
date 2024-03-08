@@ -16,13 +16,13 @@ export default {
   },
   viteFinal: async (config) => {
     return mergeConfig(config, {
-      define: {
-        "process.env": {},
-      },
       resolve: {
         alias: {
           "@": path.resolve(__dirname, "../src"),
         },
+      },
+      define: {
+        "process.env": {},
       },
     });
   },
