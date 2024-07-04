@@ -83,7 +83,8 @@ export const Default: StoryObj = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const onClickRename: NotionVersionProps["onClickRename"] = useCallback(
       async (item) => {
-        const value = window.prompt("", item.data.title) ?? "";
+        const value = window.prompt("", item.data.title);
+        if (value == null) return;
         const newTree = updateNode(tree, item.id, (node) => ({
           ...node,
           data: {
@@ -239,7 +240,8 @@ export const WithBackendApi: StoryObj = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const onClickRename: NotionVersionProps["onClickRename"] = useCallback(
       async (item) => {
-        const value = window.prompt("", item.data.title) ?? "";
+        const value = window.prompt("", item.data.title);
+        if (value == null) return;
         await backendApi.updateNode({ id: item.id, title: value });
         const newTree = updateNode(tree, item.id, (node) => ({
           ...node,
