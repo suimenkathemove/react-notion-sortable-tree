@@ -1,6 +1,6 @@
 {
   "name": "react-notion-sortable-tree",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "This library enables drag & drop like [Notion](https://www.notion.so)'s page tree in sidebar.",
   "keywords": [
     "react",
@@ -59,9 +59,5 @@
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
-  },
-  "engines": {
-    "node": "20.x",
-    "pnpm": ">=3"
   }
 }
