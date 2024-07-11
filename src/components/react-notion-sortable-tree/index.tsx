@@ -11,11 +11,34 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
+
+type NodeId = string;
+
+type Node<T extends Record<string, unknown>> = {
+  id: NodeId;
+  children: Node<T>[];
+  collapsed: boolean;
+  data: T;
+};
+
+type Tree<T extends Record<string, unknown>> = Node<T>[];
+
+type FlattenedTreeItem<T extends Record<string, unknown>> = {
+  id: NodeId;
+  parentId: NodeId | null;
+  depth: number;
+  collapsed: boolean;
+  data: T;
+};
+
+type MoveTarget = {
+  type: "parent" | "siblingParent" | "siblingChild";
+  id: NodeId;
+};
 
 type BorderOrBackground =
   | {
