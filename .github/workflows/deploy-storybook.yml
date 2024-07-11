@@ -20,7 +20,7 @@ jobs:
         uses: suimenkathemove/pnpm-cache-action@v1.0.0
       - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
         with:
-          install_command: pnpm install
+          install_command: pnpm install --no-frozen-lockfile
           build_command: pnpm build-storybook
           path: storybook-static
           checkout: false

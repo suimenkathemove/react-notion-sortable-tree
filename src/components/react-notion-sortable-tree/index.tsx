@@ -11,13 +11,34 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { BorderOrBackground, Coordinate, Rect } from "./types";
-
 import { FlattenedTreeItem, MoveTarget, NodeId, Tree } from "@/types";
 import { collapseFlattenTree } from "@/utils/collapse-flatten-tree";
 import { flattenTree } from "@/utils/flatten-tree";
 import { getDescendantIds } from "@/utils/get-descendant-ids";
 import { getLastDescendantIndex } from "@/utils/get-last-descendant-index";
+
+type BorderOrBackground =
+  | {
+      type: "border";
+      index: number;
+    }
+  | {
+      type: "lastBorder";
+    }
+  | {
+      type: "background";
+      index: number;
+    };
+
+interface Coordinate {
+  x: number;
+  y: number;
+}
+
+type Rect = Coordinate & {
+  width: number;
+  height: number;
+};
 
 export interface ContainerProps {
   style: React.CSSProperties;

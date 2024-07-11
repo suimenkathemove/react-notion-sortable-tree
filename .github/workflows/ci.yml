@@ -11,7 +11,7 @@ jobs:
       - name: Cache pnpm
         uses: suimenkathemove/pnpm-cache-action@v1.0.0
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Check
         run: pnpm tsc
 
@@ -23,7 +23,7 @@ jobs:
       - name: Cache pnpm
         uses: suimenkathemove/pnpm-cache-action@v1.0.0
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Lint
         run: pnpm lint
 
@@ -35,7 +35,7 @@ jobs:
       - name: Cache pnpm
         uses: suimenkathemove/pnpm-cache-action@v1.0.0
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Unit Test
         run: pnpm test
 
@@ -47,6 +47,6 @@ jobs:
       - name: Cache pnpm
         uses: suimenkathemove/pnpm-cache-action@v1.0.0
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Build Storybook
         run: pnpm build-storybook
